@@ -1,0 +1,126 @@
+@font-face {
+  font-family: "BMKkubulimTTF";
+  src: url("../assets/fonts/BMKkubulimTTF.ttf") format("truetype");
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding-bottom: 80px;
+  min-height: 100vh;
+  background-color: #f4f5f7;
+  color: #000;
+}
+
+.header {
+  width: 100%;
+  height: 104px;
+  font-family: "BMKkubulimTTF";
+  border-bottom: 1px solid #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.login-page {
+  min-height: calc(100vh - 104px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-container {
+  margin-top: -60px;
+  width: 392px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-container h2 {
+  margin: 0 0 24px;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.login-form {
+  width: 392px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-area {
+  width: 344px;
+  padding: 16px 8px;
+}
+
+.input-box {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.input-box:last-child {
+  margin-bottom: 0;
+}
+
+.input-box label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.input-box input {
+  width: 100%;
+  height: 33px;
+  padding: 0 12px;
+  border: 1px solid #000;
+  border-radius: 4px;
+  background-color: #f4f5f7;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.input-box input::placeholder {
+  color: #000;
+}
+
+.helper-text {
+  display: none;
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: #ff0000;
+}
+
+.login-button {
+  width: 344px;
+  height: 38px;
+  margin-top: 4px;
+  border: none;
+  border-radius: 4px;
+  background-color: #aca0eb;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.signup-link {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #000;
+  text-decoration: none;
+}

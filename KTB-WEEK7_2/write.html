@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>게시글 작성</title>
+  <link rel="stylesheet" href="./css/write.css" />
+</head>
+<body>
+  <header class="header">
+    <a href="./posts.html" class="back-button">‹</a>
+
+    <a href="./posts.html" class="logo">
+      <h1>아무 말 대잔치</h1>
+    </a>
+
+  <div class="profile-menu">
+    <img
+      src="./assets/images/defaultProfileImage.png"
+      alt="프로필 이미지"
+      class="header-profile-image"
+      id="profileButton"
+    />
+
+    <ul class="dropdown hidden">
+      <li><a href="./userEdit.html">회원정보수정</a></li>
+      <li><a href="./passwordEdit.html">비밀번호수정</a></li>
+      <li><a href="./login.html">로그아웃</a></li>
+    </ul>
+</div>
+  </header>
+
+  <main class="write-page">
+    <section class="write-container">
+      <h2>게시글 작성</h2>
+
+      <form class="write-form">
+        <div class="input-box">
+          <label for="title">제목*</label>
+          <input
+            id="title"
+            type="text"
+            placeholder="제목을 입력해주세요. (최대 26글자)"
+            maxlength="26"
+          />
+        </div>
+
+        <div class="input-box">
+          <label for="content">내용*</label>
+          <textarea
+            id="content"
+            placeholder="내용을 입력해주세요."
+          ></textarea>
+          <p class="helper-text">* helper text</p>
+        </div>
+
+        <div class="file-box">
+          <label>이미지</label>
+
+          <div class="file-row">
+            <label for="image" class="file-button">파일 선택</label>
+            <span class="file-name">파일을 선택해주세요.</span>
+            <input id="image" type="file" accept="image/*" hidden />
+          </div>
+        </div>
+
+        <button type="submit" class="submit-button">완료</button>
+      </form>
+    </section>
+  </main>
+  <script src="./js/write.js"></script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>게시글 상세조회</title>
+  <link rel="stylesheet" href="./css/postDetails.css" />
+</head>
+<body>
+  <header class="header">
+    <a href="./posts.html" class="back-button">‹</a>
+
+    <a href="./posts.html" class="logo">
+      <h1>아무 말 대잔치</h1>
+    </a>
+
+    <div class="profile-menu">
+      <img
+        src="./assets/images/defaultProfileImage.png"
+        alt="프로필 이미지"
+        class="header-profile-image"
+        id="profileButton"
+      />
+
+      <ul class="dropdown hidden">
+        <li><a href="./userEdit.html">회원정보수정</a></li>
+        <li><a href="./passwordEdit.html">비밀번호수정</a></li>
+        <li><a href="./login.html" id="logoutButton">로그아웃</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="detail-page">
+    <article class="detail-container">
+      <section class="post-top">
+        <h2></h2>
+
+        <div class="post-info-row">
+          <div class="author-box"></div>
+
+          <div class="post-button-box">
+            <a href="./edit.html" class="small-button">수정</a>
+            <button type="button" class="small-button" id="postDeleteButton">삭제</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="post-body">
+        <div class="post-image"></div>
+
+        <p class="post-text"></p>
+
+        <div class="count-row">
+          <button type="button" class="count-box like-count">
+            <strong>0</strong>
+            <span>좋아요수</span>
+          </button>
+
+          <div class="count-box">
+            <strong>0</strong>
+            <span>조회수</span>
+          </div>
+
+          <div class="count-box">
+            <strong>0</strong>
+            <span>댓글</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="comment-write-box">
+        <textarea placeholder="댓글을 남겨주세요!"></textarea>
+
+        <div class="comment-submit-row">
+          <button type="button">댓글 등록</button>
+        </div>
+      </section>
+
+      <section class="comment-list"></section>
+    </article>
+  </main>
+
+  <div class="modal-overlay hidden" id="postDeleteModal">
+    <div class="modal">
+      <h3>게시글을 삭제하시겠습니까?</h3>
+      <p>삭제한 내용은 복구 할 수 없습니다.</p>
+
+      <div class="modal-button-row">
+        <button type="button" class="cancel-button">취소</button>
+        <button type="button" class="confirm-button">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay hidden" id="commentDeleteModal">
+    <div class="modal">
+      <h3>댓글을 삭제하시겠습니까?</h3>
+      <p>삭제한 내용은 복구 할 수 없습니다.</p>
+
+      <div class="modal-button-row">
+        <button type="button" class="cancel-button">취소</button>
+        <button type="button" class="confirm-button">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./js/postDetails.js"></script>
+</body>
+</html>
