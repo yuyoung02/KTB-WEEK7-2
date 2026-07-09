@@ -1,10 +1,10 @@
 const API_BASE_URL = "http://localhost:8080";
 
 // localStorage에서 로그인한 사용자 id 가져오기
-const loginUserId = localStorage.getItem("userId");
+const accessToken = localStorage.getItem("accessToken");
 
 // 로그인 안 했으면  -> 로그인 페이지로
-if (!loginUserId) {
+if (!accessToken) {
   window.location.href = "./login.html";
 }
 
@@ -130,17 +130,17 @@ passwordForm.addEventListener("submit", async function (event) {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/users/${loginUserId}/password`, {
+    const response = await fetch(`${API_BASE_URL}/users/me/password`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`
       },
       body: JSON.stringify({
-        requestUserId: Number(loginUserId),
         originalPwd: currentPasswordInput.value,
         newPwd: newPasswordInput.value,
         oneMoreNewPwd: newPasswordCheckInput.value,
-      }),
+      })
     });
 
     if (response.status === 401) {

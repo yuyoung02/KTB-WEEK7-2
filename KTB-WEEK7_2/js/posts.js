@@ -6,10 +6,10 @@ const dropdown = document.querySelector(".dropdown");
 const logoutButton = document.querySelector("#logoutButton");
 const postList = document.querySelector(".post-list");
 
-const loginUserId = localStorage.getItem("userId");
+const accessToken = localStorage.getItem("accessToken");
 
 // 로그인 여부 확인
-if (!loginUserId) {
+if (!accessToken) {
   alert("로그인이 필요합니다.");
   window.location.href = "./login.html";
 }
@@ -46,9 +46,14 @@ function formatDate(dateString) {
 }
 
 // 사용자 정보 조회
-async function fetchUser(userId) {
+async function fetchUser(accessToken) {
   try {
-    const response = await fetch(`${API_BASE_URL}/users/${userId}`);
+    const response = await fetch(`${API_BASE_URL}/users/me`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${accessToken}`
+      }
+    });
 
     if (!response.ok) {
       return null;
@@ -79,19 +84,13 @@ async function fetchCommentCount(postId) {
 }
 
 // 게시글 카드 생성
-function createPostCard(post, author, commentCount) {
+function createPostCard(post, commentCount) {
   const article = document.createElement("article");
   article.className = "post-card";
   
-  let nickname;
+  const nickname = post.userNickname;
 
-  if (author && author.nickname) {
-    nickname = author.nickname;
-  } else {
-    nickname = `작성자 ${post.userId}`;
-  }
-
-  const authorImage = getProfileImage(author?.image);
+  const authorImage = getProfileImage(post.image);
 
   article.innerHTML = `
     <a href="./postDetails.html?postId=${post.postId}" class="post-link">
@@ -124,7 +123,7 @@ function createPostCard(post, author, commentCount) {
 
 // 로그인한 사용자 프로필 조회
 async function loadLoginUserProfile() {
-  const user = await fetchUser(loginUserId);
+  const user = await fetchUser(accessToken);
 
   if (!user) {
     return;
@@ -159,10 +158,9 @@ async function loadPosts() {
     }
 
     for (const post of posts) {
-      const author = await fetchUser(post.userId);
       const commentCount = await fetchCommentCount(post.postId);
 
-      const postCard = createPostCard(post, author, commentCount);
+      const postCard = createPostCard(post, commentCount);
       postList.appendChild(postCard);
     }
   } catch (error) {

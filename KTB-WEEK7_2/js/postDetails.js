@@ -29,7 +29,8 @@ const postDeleteModal = document.querySelector("#postDeleteModal");
 const commentDeleteModal = document.querySelector("#commentDeleteModal");
 
 // 로그인한 사용자, 게시글 id 가져오기
-const loginUserId = localStorage.getItem("userId");
+const accessToken = localStorage.getItem("accessToken");
+let loginUser = null;
 const params = new URLSearchParams(window.location.search);
 const postId = params.get("postId");
 
@@ -38,7 +39,7 @@ let editingCommentId = null;
 let isLiked = false;
 
 // 로그인 여부 확인 -> index 뭘로 할지 정하기
-if (!loginUserId) {
+if (!accessToken) {
   alert("로그인이 필요합니다.");
   window.location.href = "./login.html";
 }
@@ -61,9 +62,15 @@ function formatDate(dateString) {
 }
 
 // 사용자 정보 조회
-async function fetchUser(userId) {
+async function fetchUser(accessToken) {
   try {
-    const response = await fetch(`${API_BASE_URL}/users/${userId}`);
+    const response = await fetch(`${API_BASE_URL}/users/me`,
+  {
+    method : "GET",
+    headers :{
+      "Authorization": `Bearer ${accessToken}`
+    }
+  });
 
     if (!response.ok) return null;
 
@@ -76,9 +83,11 @@ async function fetchUser(userId) {
 
 // 로그인한 사용자 프로필 불러오기
 async function loadLoginUserProfile() {
-  const user = await fetchUser(loginUserId);
+  const user = await fetchUser(accessToken);
 
   if (!user) return;
+
+  loginUser = user;
 
   profileButton.src = getProfileImage(user.image);
 }
@@ -100,7 +109,7 @@ async function loadPostDetail() {
     }
 
     const post = await response.json();
-    const author = await fetchUser(post.userId);
+    const author = {nickname: post.nickname,image: post.image};
 
     postTitle.textContent = post.subject;
     postText.textContent = post.text;
@@ -123,7 +132,7 @@ async function loadPostDetail() {
     likeCountText.textContent = post.likeCount;
     viewCountText.textContent = post.viewNum;
 
-    if (Number(loginUserId) !== post.userId) {
+    if (loginUser.userId !== post.userId) {
       postButtonBox.style.display = "none";
     } else {
       const editLink = postButtonBox.querySelector("a");
@@ -162,12 +171,12 @@ async function loadComments() {
 }
 
 // 댓글 생성
-function createCommentItem(comment, user) {
+function createCommentItem(comment) {
   const article = document.createElement("article");
   article.className = "comment-item";
   article.dataset.commentId = comment.commentId;
 
-  const isOwner = Number(loginUserId) === comment.userId;
+  const isOwner = loginUser.userId === comment.userId;
 
   let buttonHtml = "";
 
@@ -183,8 +192,8 @@ function createCommentItem(comment, user) {
   article.innerHTML = `
     <div class="comment-top">
       <div class="author-box">
-        <img src="${getProfileImage(user?.image)}" alt="댓글 작성자 프로필" />
-        <strong>${user?.nickname || `작성자 ${comment.userId}`}</strong>
+        <img src="${getProfileImage(comment.image)}" alt="댓글 작성자 프로필" />
+        <strong>${comment.nickname}</strong>
         <span></span>
       </div>
 
@@ -203,9 +212,12 @@ likeButton.addEventListener("click", async function () {
     const method = isLiked ? "DELETE" : "POST";
 
     const response = await fetch(
-      `${API_BASE_URL}/posts/${postId}/likes?userId=${loginUserId}`,
+      `${API_BASE_URL}/posts/${postId}/likes`,
       {
-        method: method
+        method: method,
+        headers: {
+        "Authorization": `Bearer ${accessToken}`
+      }
       }
     );
 
@@ -257,11 +269,11 @@ async function createComment(commentText) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`
       },
       body: JSON.stringify({
-        userId: Number(loginUserId),
-        commentText: commentText,
-      }),
+        commentText: commentText
+      })
     });
 
     if (!response.ok) {
@@ -281,15 +293,16 @@ async function createComment(commentText) {
 async function updateComment(commentId, commentText) {
   try {
     const response = await fetch(
-      `${API_BASE_URL}/posts/${postId}/comments/${commentId}?userId=${loginUserId}`,
+      `${API_BASE_URL}/posts/${postId}/comments/${commentId}`,
       {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`
         },
         body: JSON.stringify({
           commentText: commentText,
-        }),
+        })
       }
     );
 
@@ -341,9 +354,10 @@ postDeleteButton.addEventListener("click", function () {
 postDeleteModal.querySelector(".confirm-button").addEventListener("click", async function () {
   try {
     const response = await fetch(
-      `${API_BASE_URL}/posts/${postId}?userId=${loginUserId}`,
+      `${API_BASE_URL}/posts/${postId}`,
       {
-        method: "DELETE"
+        method: "DELETE",
+        headers: {"Authorization": `Bearer ${accessToken}`}
       }
     );
 
@@ -365,9 +379,12 @@ commentDeleteModal.querySelector(".confirm-button").addEventListener("click", as
 
   try {
     const response = await fetch(
-      `${API_BASE_URL}/posts/${postId}/comments/${selectedCommentId}?userId=${loginUserId}`,
+      `${API_BASE_URL}/posts/${postId}/comments/${selectedCommentId}`,
       {
-        method: "DELETE"
+        method: "DELETE",
+        headers : {
+          "Authorization": `Bearer ${accessToken}`
+        }
       }
     );
 
@@ -379,6 +396,7 @@ commentDeleteModal.querySelector(".confirm-button").addEventListener("click", as
     selectedCommentId = null;
     closeAllModals();
     await loadComments();
+
   } catch (error) {
     console.error(error);
     alert("서버와 연결할 수 없습니다.");
@@ -406,7 +424,13 @@ function closeAllModals() {
 // 좋어요 여부 확인
 async function loadLikeStatus() {
   const response = await fetch(
-    `${API_BASE_URL}/posts/${postId}/likes?userId=${loginUserId}`
+    `${API_BASE_URL}/posts/${postId}/likes`,
+  {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${accessToken}`
+    }
+  }
   );
 
   if (!response.ok) return;
@@ -432,7 +456,11 @@ logoutButton.addEventListener("click", function (event) {
   window.location.href = "./login.html";
 });
 
-loadLoginUserProfile();
-loadPostDetail();
-loadComments();
-loadLikeStatus();
+async function init() {
+  await loadLoginUserProfile();
+  await loadPostDetail();
+  await loadComments();
+  await loadLikeStatus();
+}
+
+init();

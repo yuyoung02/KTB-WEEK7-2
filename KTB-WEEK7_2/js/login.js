@@ -88,8 +88,8 @@ loginForm.addEventListener("submit", async function (event) {
 
     console.log("로그인 성공:", data);
 
-    // 백에서 userId 반환
-    localStorage.setItem("userId", data.userId);
+    // WEEK8: accessToken 반환으로 변경
+    localStorage.setItem("accessToken", data.accessToken);
 
     window.location.href = "./posts.html";
   } catch (error) {

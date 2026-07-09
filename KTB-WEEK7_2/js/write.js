@@ -15,11 +15,11 @@ const profileButton = document.querySelector("#profileButton");
 const dropdown = document.querySelector(".dropdown");
 const logoutButton = document.querySelector(".dropdown li:last-child a");
 
-const loginUserId = localStorage.getItem("userId");
+const accessToken = localStorage.getItem("accessToken");
 
 let postImageUrl = null;
 
-if (!loginUserId) {
+if (!accessToken) {
   alert("로그인이 필요합니다.");
   window.location.href = "./login.html";
 }
@@ -66,7 +66,14 @@ function getProfileImage(image) {
 
 async function loadLoginUserProfile() {
   try {
-    const response = await fetch(`${API_BASE_URL}/users/${loginUserId}`);
+    const response = await fetch(`${API_BASE_URL}/users/me`,
+      {
+        method : "GET",
+        headers : {
+          "Authorization": `Bearer ${accessToken}`
+        }
+      }
+    );
 
     if (!response.ok) {
       return;
@@ -111,10 +118,10 @@ writeForm.addEventListener("submit", async function (event) {
     const response = await fetch(`${API_BASE_URL}/posts`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`
       },
       body: JSON.stringify({
-        userId: Number(loginUserId),
         subject: titleInput.value.trim(),
         text: contentTextarea.value.trim(),
         // TODO: 이미지 구현

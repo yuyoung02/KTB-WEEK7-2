@@ -18,15 +18,16 @@ const logoutButton = document.querySelector("#logoutButton");
 const backButton = document.querySelector("#backButton");
 
 // 로그인 한 사람 기억 -> 이후 JWT로 바꿀 예정..?
-const loginUserId = localStorage.getItem("userId");
+const accessToken = localStorage.getItem("accessToken");
 const params = new URLSearchParams(window.location.search);
 const postId = params.get("postId");
+let loginUser = null;
 
 // TODO: 이미지 구현 해야된다..
 let patchImageUrl = null;
 
 // 로그인 확인
-if (!loginUserId) {
+if (!accessToken) {
   alert("로그인이 필요합니다.");
   window.location.href = "./login.html";
 }
@@ -41,7 +42,14 @@ if (!postId) {
 backButton.href = `./postDetails.html?postId=${postId}`;
 async function loadPostDetail() {
   try {
-    const response = await fetch(`${API_BASE_URL}/posts/${postId}`);
+    const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`
+      }
+    }
+    );
 
     if (response.status === 404) {
       alert("게시글을 찾을 수 없습니다.");
@@ -56,7 +64,7 @@ async function loadPostDetail() {
 
     const post = await response.json();
 
-    if (Number(loginUserId) !== post.userId) {
+    if (loginUser.userId !== post.userId) {
       alert("게시글 작성자만 수정할 수 있습니다.");
       window.location.href = `./postDetails.html?postId=${postId}`;
       return;
@@ -108,9 +116,14 @@ function validateEditForm() {
 }
 
 // 회원정보 가져오기
-async function fetchUser(userId) {
+async function fetchUser(accessToken) {
   try {
-    const response = await fetch(`${API_BASE_URL}/users/${userId}`);
+    const response = await fetch(`${API_BASE_URL}/users/me`,
+      {
+        method : "GET",
+        headers : {"Authorization": `Bearer ${accessToken}`}
+      }
+    );
 
     if (!response.ok) return null;
 
@@ -122,9 +135,11 @@ async function fetchUser(userId) {
 }
 
 async function loadLoginUserProfile() {
-  const user = await fetchUser(loginUserId);
+  const user = await fetchUser(accessToken);
 
   if (!user) return;
+
+  loginUser = user;
 
   profileButton.src = getProfileImage(user.image);
 }
@@ -159,12 +174,12 @@ editForm.addEventListener("submit", async function (event) {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`
       },
       body: JSON.stringify({
-        requestUserId: Number(loginUserId),
         patchSubject: titleInput.value.trim(),
         patchText: contentTextarea.value.trim(),
-        patchImage: patchImageUrl,
+        patchImage: patchImageUrl
       }),
     });
 
@@ -212,5 +227,9 @@ logoutButton.addEventListener("click", function (event) {
   window.location.href = "./login.html";
 });
 
-loadLoginUserProfile();
-loadPostDetail();
+async function init() {
+  await loadLoginUserProfile();
+  await loadPostDetail();
+}
+
+init();

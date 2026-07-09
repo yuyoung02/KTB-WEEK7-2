@@ -33,9 +33,9 @@ const passwordConfirmButton = document.querySelector("#passwordConfirmButton");
 
 let profileImageUrl = null;
 
-const loginUserId = localStorage.getItem("userId");
+const accessToken = localStorage.getItem("accessToken");
 
-if (!loginUserId) {
+if (!accessToken) {
   location.href = "./login.html";
 }
 
@@ -93,7 +93,13 @@ function getProfileImage(image) {
 
 // 사용자 정보 조회
 async function loadUser() {
-  const response = await fetch(`${API_BASE_URL}/users/${loginUserId}`);
+  const response = await fetch(`${API_BASE_URL}/users/me`,
+  {
+    method : "GET",
+    headers :{
+      "Authorization": `Bearer ${accessToken}`
+    }
+  });
 
   const user = await response.json();
 
@@ -131,14 +137,14 @@ userEditForm.addEventListener("submit", async function (event) {
 
   // 성공하면 -> patch 보냄
   const response = await fetch(
-    `${API_BASE_URL}/users/${loginUserId}`,
+    `${API_BASE_URL}/users/me`,
     {
       method: "PATCH",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`
       },
       body: JSON.stringify({
-        requestUserId: Number(loginUserId),
         nickname: nicknameInput.value.trim(),
         image: null // TODO : 이미지 구현
       })
@@ -207,13 +213,13 @@ passwordConfirmButton.addEventListener("click", async function () {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/users/${loginUserId}`, {
+    const response = await fetch(`${API_BASE_URL}/users/me`, {
       method: "DELETE",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`
       },
       body: JSON.stringify({
-        requestUserId: Number(loginUserId),
         password: password
       })
     });
