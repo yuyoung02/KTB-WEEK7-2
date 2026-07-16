@@ -1,3 +1,6 @@
+// 로그인
+// AppCommon.requireAuth();
+
 // 프사 태그
 const profileButton = document.querySelector("#profileButton");
 const dropdown = document.querySelector(".dropdown");
@@ -34,12 +37,6 @@ const postId = params.get("postId");
 let selectedCommentId = null;
 let editingCommentId = null;
 let isLiked = false;
-
-// 로그인 여부 확인 -> index 뭘로 할지 정하기
-if (!accessToken) {
-  alert("로그인이 필요합니다.");
-  window.location.href = "./login.html";
-}
 
 // 게시글 존재 여부 확인
 if (!postId) {

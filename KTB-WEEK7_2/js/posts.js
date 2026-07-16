@@ -1,3 +1,6 @@
+// 로그인
+// AppCommon.requireAuth();
+
 const profileButton = document.querySelector("#profileButton");
 const dropdown = document.querySelector(".dropdown");
 const logoutButton = document.querySelector("#logoutButton");

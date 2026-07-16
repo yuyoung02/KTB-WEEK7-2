@@ -1,3 +1,6 @@
+// 로그인
+// AppCommon.requireAuth();
+
 const userEditForm = document.querySelector(".user-edit-form");
 
 const profileImageInput = document.querySelector("#profileImage");
@@ -33,10 +36,6 @@ let profileImageUrl = null;
 let profilePreviewUrl = null;
 
 const accessToken = localStorage.getItem("accessToken");
-
-if (!accessToken) {
-  location.href = "./login.html";
-}
 
 // helper text 관련
 function showHelper(message) {

@@ -19,6 +19,17 @@
     return image || DEFAULT_PROFILE_IMAGE;
   }
 
+  function requireAuth(options = {}) {
+    if (getAccessToken()) return true;
+
+    const message = options.message ?? "로그인이 필요합니다.";
+    const redirectUrl = options.redirectUrl ?? "./login.html";
+
+    if (options.showAlert !== false) alert(message);
+    window.location.href = redirectUrl;
+    return false;
+  }
+
   async function request(path, options = {}) {
     const { auth = false, headers = {}, ...fetchOptions } = options;
     const requestHeaders = new Headers(headers);
@@ -126,6 +137,7 @@
     loadProfileImage,
     logout,
     request,
+    requireAuth,
     setHelperText,
     setupProfileMenu
   };

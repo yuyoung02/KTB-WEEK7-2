@@ -1,3 +1,6 @@
+// 로그인
+// AppCommon.requireAuth();
+
 const editForm = document.querySelector(".edit-form");
 const titleInput = document.querySelector("#title");
 const contentTextarea = document.querySelector("#content");

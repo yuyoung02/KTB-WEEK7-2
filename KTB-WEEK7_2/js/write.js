@@ -1,3 +1,6 @@
+// 로그인
+// AppCommon.requireAuth();
+
 const writeForm = document.querySelector(".write-form");
 const titleInput = document.querySelector("#title");
 const contentTextarea = document.querySelector("#content");

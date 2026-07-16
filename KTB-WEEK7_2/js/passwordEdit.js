@@ -1,10 +1,9 @@
+// 로그인
+// AppCommon.requireAuth();
+
 // localStorage에서 로그인한 사용자 id 가져오기
 const accessToken = localStorage.getItem("accessToken");
 
-// 로그인 안 했으면  -> 로그인 페이지로
-if (!accessToken) {
-  window.location.href = "./login.html";
-}
 
 // HTML 태그
 const passwordForm = document.querySelector(".password-form");
