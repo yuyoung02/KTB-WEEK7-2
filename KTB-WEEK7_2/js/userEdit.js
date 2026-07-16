@@ -1,5 +1,3 @@
-const API_BASE_URL = "http://localhost:8080";
-
 const userEditForm = document.querySelector(".user-edit-form");
 
 const profileImageInput = document.querySelector("#profileImage");
@@ -32,6 +30,7 @@ const passwordCancelButton = document.querySelector("#passwordCancelButton");
 const passwordConfirmButton = document.querySelector("#passwordConfirmButton");
 
 let profileImageUrl = null;
+let profilePreviewUrl = null;
 
 const accessToken = localStorage.getItem("accessToken");
 
@@ -41,12 +40,11 @@ if (!accessToken) {
 
 // helper text 관련
 function showHelper(message) {
-  helperText.textContent = `* ${message}`;
-  helperText.style.display = "block";
+  AppCommon.setHelperText(helperText, message);
 }
 
 function hideHelper() {
-  helperText.style.display = "none";
+  AppCommon.setHelperText(helperText);
 }
 
 function showWithdrawHelper(message) {
@@ -86,29 +84,24 @@ function showToast() {
   }, 1500);
 }
 
-// TODO : 이미지 구현 해야함ㅜㅜ
-function getProfileImage(image) {
-  return null;
-}
-
 // 사용자 정보 조회
 async function loadUser() {
-  const response = await fetch(`${API_BASE_URL}/users/me`,
-  {
-    method : "GET",
-    headers :{
-      "Authorization": `Bearer ${accessToken}`
+  try {
+    const user = await AppCommon.request("/users/me", { auth: true });
+
+    emailText.textContent = user.email;
+    nicknameInput.value = user.nickname;
+    profilePreview.src = AppCommon.getProfileImage(user.image);
+    profileButton.src = AppCommon.getProfileImage(user.image);
+    profileImageUrl = user.image ?? null;
+    if (profilePreviewUrl) {
+      URL.revokeObjectURL(profilePreviewUrl);
+      profilePreviewUrl = null;
     }
-  });
-
-  const user = await response.json();
-
-  emailText.textContent = user.email;
-  nicknameInput.value = user.nickname;
-
-  profilePreview.src = getProfileImage(user.image);
-  profileButton.src = getProfileImage(user.image);
-  profileImageUrl = user.image;
+  } catch (error) {
+    console.error(error);
+    showHelper("회원정보를 불러오지 못했습니다.");
+  }
 }
 
 // 2-1 이벤트 처리
@@ -118,10 +111,10 @@ profileImageInput.addEventListener("change", function () {
 
   if (!file) return;
 
-  // TODO : 이미지 구현
-  profileImageUrl = null;
-
-  profilePreview.src = profileImageUrl;
+  if (profilePreviewUrl) URL.revokeObjectURL(profilePreviewUrl);
+  profilePreviewUrl = URL.createObjectURL(file);
+  profilePreview.src = profilePreviewUrl;
+  showHelper("이미지 업로드 기능은 준비 중이며 기존 이미지는 유지됩니다.");
 });
 
 nicknameInput.addEventListener("input", validateNickname);
@@ -135,39 +128,29 @@ userEditForm.addEventListener("submit", async function (event) {
     return;
   }
 
-  // 성공하면 -> patch 보냄
-  const response = await fetch(
-    `${API_BASE_URL}/users/me`,
-    {
+  try {
+    await AppCommon.request("/users/me", {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${accessToken}`
-      },
-      body: JSON.stringify({
+      auth: true,
+      body: {
         nickname: nicknameInput.value.trim(),
-        image: null // TODO : 이미지 구현
-      })
+        image: profileImageUrl
+      }
+    });
+
+    showToast();
+    await loadUser();
+  } catch (error) {
+    console.error(error);
+
+    if (error.status === 409) {
+      showHelper("이미 사용중인 닉네임입니다.");
+    } else if (error.status === 403) {
+      showHelper("수정 권한이 없습니다.");
+    } else {
+      showHelper("회원정보 수정에 실패했습니다.");
     }
-  );
-
-  if (response.status === 409) {
-    showHelper("이미 사용중인 닉네임입니다.");
-    return;
   }
-
-  if (response.status === 403) {
-    showHelper("수정 권한이 없습니다.");
-    return;
-  }
-
-  if (!response.ok) {
-    showHelper("회원정보 수정에 실패했습니다.");
-    return;
-  }
-
-  showToast();
-  loadUser();
 });
 
 withdrawButton.addEventListener("click", function () {
@@ -213,54 +196,24 @@ passwordConfirmButton.addEventListener("click", async function () {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/users/me`, {
+    await AppCommon.request("/users/me", {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${accessToken}`
-      },
-      body: JSON.stringify({
+      auth: true,
+      body: {
         password: password
-      })
+      }
     });
-
-    if (response.status === 401) {
-      showWithdrawHelper("비밀번호가 일치하지 않습니다.");
-      return;
-    }
-
-    if (response.status === 403) {
-      showWithdrawHelper("삭제 권한이 없습니다.");
-      return;
-    }
-
-    if (!response.ok) {
-      showWithdrawHelper("회원탈퇴에 실패했습니다.");
-      return;
-    }
     localStorage.clear(); // 브라우저에 저장된 로그인 기록 지우기
     window.location.href = "./login.html";
   } catch (error) {
     console.error(error);
-    showWithdrawHelper("서버와 연결할 수 없습니다.");
+    if (error.status === 401) showWithdrawHelper("비밀번호가 일치하지 않습니다.");
+    else if (error.status === 403) showWithdrawHelper("삭제 권한이 없습니다.");
+    else showWithdrawHelper("회원탈퇴에 실패했거나 서버와 연결할 수 없습니다.");
   }
 });
 
 // 프사 버튼
-profileButton.addEventListener("click", function (event) {
-  event.stopPropagation();
-  dropdown.classList.toggle("hidden");
-});
-
-document.addEventListener("click", function () {
-  dropdown.classList.add("hidden");
-});
-
-logoutButton.addEventListener("click", function (event) {
-  event.preventDefault();
-
-  localStorage.clear();
-  location.href = "./login.html";
-});
+AppCommon.setupProfileMenu({ profileButton, dropdown, logoutButton });
 
 loadUser();

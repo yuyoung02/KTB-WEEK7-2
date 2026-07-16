@@ -1,5 +1,3 @@
-const API_BASE_URL = "http://localhost:8080";
-
 // localStorage에서 로그인한 사용자 id 가져오기
 const accessToken = localStorage.getItem("accessToken");
 
@@ -130,43 +128,15 @@ passwordForm.addEventListener("submit", async function (event) {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/users/me/password`, {
+    await AppCommon.request("/users/me/password", {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${accessToken}`
-      },
-      body: JSON.stringify({
+      auth: true,
+      body: {
         originalPwd: currentPasswordInput.value,
         newPwd: newPasswordInput.value,
         oneMoreNewPwd: newPasswordCheckInput.value,
-      })
+      }
     });
-
-    if (response.status === 401) {
-      showHelper(0, "기존 비밀번호가 일치하지 않습니다.");
-      return;
-    }
-
-    if (response.status === 400) {
-      showHelper(2, "새 비밀번호를 다시 확인해주세요.");
-      return;
-    }
-
-    if (response.status === 403) {
-      showHelper(0, "비밀번호 수정 권한이 없습니다.");
-      return;
-    }
-
-    if (response.status === 404) {
-      showHelper(0, "사용자를 찾을 수 없습니다.");
-      return;
-    }
-
-    if (!response.ok) {
-      showHelper(0, "비밀번호 수정에 실패했습니다.");
-      return;
-    }
 
     // 비밀번호 변경 성공 -> 토스트 보여주기
     toast.style.display = "flex";
@@ -178,23 +148,12 @@ passwordForm.addEventListener("submit", async function (event) {
     }, 1500);
   } catch (error) {
     console.error(error);
-    showHelper(0, "서버와 연결할 수 없습니다.");
+    if (error.status === 401) showHelper(0, "기존 비밀번호가 일치하지 않습니다.");
+    else if (error.status === 400) showHelper(2, "새 비밀번호를 다시 확인해주세요.");
+    else if (error.status === 403) showHelper(0, "비밀번호 수정 권한이 없습니다.");
+    else if (error.status === 404) showHelper(0, "사용자를 찾을 수 없습니다.");
+    else showHelper(0, "비밀번호 수정에 실패했거나 서버와 연결할 수 없습니다.");
   }
 });
 
-profileButton.addEventListener("click", function (event) {
-  event.stopPropagation();
-  dropdown.classList.toggle("hidden");
-});
-
-document.addEventListener("click", function () {
-  dropdown.classList.add("hidden");
-});
-
-// 비밀번호 변경 후 localStorage 삭제 -> 로그인 페이지로 이동
-logoutButton.addEventListener("click", function (event) {
-  event.preventDefault();
-
-  localStorage.clear();
-  window.location.href = "./login.html";
-});
+AppCommon.setupProfileMenu({ profileButton, dropdown, logoutButton });

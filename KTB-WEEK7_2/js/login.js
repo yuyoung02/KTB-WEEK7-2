@@ -1,5 +1,3 @@
-const API_BASE_URL = "http://localhost:8080";
-
 // HTML 태그들
 const loginForm = document.querySelector(".login-form");
 const emailInput = document.querySelector("#email");
@@ -8,13 +6,11 @@ const helperText = document.querySelector(".helper-text");
 
 // helper text
 function showError(message) {
-  helperText.textContent = `* ${message}`;
-  helperText.style.display = "block";
+  AppCommon.setHelperText(helperText, message);
 }
 
 function hideError() {
-  helperText.textContent = "";
-  helperText.style.display = "none";
+  AppCommon.setHelperText(helperText);
 }
 
 //이메일 형식 검사
@@ -63,28 +59,13 @@ loginForm.addEventListener("submit", async function (event) {
 
   // fetch 보내기
   try {
-    const response = await fetch(`${API_BASE_URL}/users/login`, {
+    const data = await AppCommon.request("/users/login", {
       method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({email: emailInput.value.trim(),password: passwordInput.value})
+      body: {
+        email: emailInput.value.trim(),
+        password: passwordInput.value
+      }
     });
-
-    if (response.status === 401) {
-      showError("이메일 또는 비밀번호가 올바르지 않습니다.");
-      return;
-    }
-
-    if (response.status === 400) {
-      showError("입력값을 다시 확인해주세요.");
-      return;
-    }
-
-    if (!response.ok) {
-      showError("로그인에 실패했습니다.");
-      return;
-    }
-
-    const data = await response.json();
 
     console.log("로그인 성공:", data);
 
@@ -94,6 +75,12 @@ loginForm.addEventListener("submit", async function (event) {
     window.location.href = "./home.html";
   } catch (error) {
     console.error(error);
-    showError("서버와 연결할 수 없습니다.");
+    if (error.status === 401) {
+      showError("이메일 또는 비밀번호가 올바르지 않습니다.");
+    } else if (error.status === 400) {
+      showError("입력값을 다시 확인해주세요.");
+    } else {
+      showError("로그인에 실패했거나 서버와 연결할 수 없습니다.");
+    }
   }
 });

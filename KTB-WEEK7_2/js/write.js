@@ -1,6 +1,3 @@
-const API_BASE_URL = "http://localhost:8080";
-const DEFAULT_PROFILE_IMAGE = "./assets/images/defaultProfileImage.png";
-
 const writeForm = document.querySelector(".write-form");
 const titleInput = document.querySelector("#title");
 const contentTextarea = document.querySelector("#content");
@@ -17,23 +14,14 @@ const stadiumDropdown = document.querySelector("#stadiumDropdown");
 const stadiumItems = stadiumDropdown?.querySelectorAll(".stadium-option") ?? [];
 const selectedStadiumBox = document.querySelector("#selectedStadium");
 
-const accessToken = localStorage.getItem("accessToken");
-
 let selectedStadium = "";
-let postImageUrl = null;
-
-function getProfileImage(image) {
-  return image || DEFAULT_PROFILE_IMAGE;
-}
 
 function showHelper(message) {
-  helperText.textContent = `* ${message}`;
-  helperText.style.display = "block";
+  AppCommon.setHelperText(helperText, message);
 }
 
 function hideHelper() {
-  helperText.textContent = "";
-  helperText.style.display = "none";
+  AppCommon.setHelperText(helperText);
 }
 
 if (stadiumButton && stadiumDropdown) {
@@ -90,22 +78,7 @@ function validateWriteForm() {
 }
 
 async function loadLoginUserProfile() {
-  if (!accessToken) return;
-
-  try {
-    const response = await fetch(`${API_BASE_URL}/users/me`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    });
-
-    if (!response.ok) return;
-
-    const user = await response.json();
-    profileButton.src = getProfileImage(user.image);
-  } catch (error) {
-    console.error(error);
-  }
+  await AppCommon.loadProfileImage(profileButton);
 }
 
 imageInput.addEventListener("change", function () {
@@ -118,7 +91,6 @@ imageInput.addEventListener("change", function () {
   }
 
   fileName.textContent = file.name;
-  postImageUrl = URL.createObjectURL(file);
 });
 
 writeForm.addEventListener("submit", async function (event) {
@@ -127,24 +99,16 @@ writeForm.addEventListener("submit", async function (event) {
   if (!validateWriteForm()) return;
 
   try {
-    const response = await fetch(`${API_BASE_URL}/posts`, {
+    await AppCommon.request("/posts", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`
-      },
-      body: JSON.stringify({
+      auth: true,
+      body: {
         subject: titleInput.value.trim(),
         text: contentTextarea.value.trim(),
         stadium: selectedStadium,
         image: null
-      })
+      }
     });
-
-    if (!response.ok) {
-      showHelper("게시글 작성에 실패했습니다.");
-      return;
-    }
 
     window.location.href = "./posts.html";
   } catch (error) {
@@ -153,10 +117,7 @@ writeForm.addEventListener("submit", async function (event) {
   }
 });
 
-profileButton.addEventListener("click", function (event) {
-  event.stopPropagation();
-  dropdown.classList.toggle("hidden");
-});
+AppCommon.setupProfileMenu({ profileButton, dropdown, logoutButton });
 
 document.addEventListener("click", function (event) {
   dropdown.classList.add("hidden");
@@ -164,12 +125,6 @@ document.addEventListener("click", function (event) {
   if (!event.target.closest(".stadium-select")) {
     stadiumDropdown?.classList.add("hidden");
   }
-});
-
-logoutButton.addEventListener("click", function (event) {
-  event.preventDefault();
-  localStorage.clear();
-  window.location.href = "./login.html";
 });
 
 loadLoginUserProfile();

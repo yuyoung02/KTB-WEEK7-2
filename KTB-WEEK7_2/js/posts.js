@@ -1,6 +1,3 @@
-const API_BASE_URL = "http://localhost:8080";
-const DEFAULT_PROFILE_IMAGE = "./assets/images/defaultProfileImage.png";
-
 const profileButton = document.querySelector("#profileButton");
 const dropdown = document.querySelector(".dropdown");
 const logoutButton = document.querySelector("#logoutButton");
@@ -17,27 +14,12 @@ const prevPageButton = document.querySelector("#prevPage");
 const nextPageButton = document.querySelector("#nextPage");
 const pageNumbers = document.querySelector("#pageNumbers");
 
-const accessToken = localStorage.getItem("accessToken");
-
 let selectedStadium = "";
 let currentPage = 0;
 const pageSize = 10;
 let totalPages = 1;
 
-function getProfileImage(image) {
-  return image || DEFAULT_PROFILE_IMAGE;
-}
-
-profileButton.addEventListener("click", function (event) {
-  event.stopPropagation();
-  dropdown.classList.toggle("hidden");
-  stadiumDropdown.classList.add("hidden");
-  stadiumButton.classList.remove("open");
-});
-
-dropdown.addEventListener("click", function (event) {
-  event.stopPropagation();
-});
+AppCommon.setupProfileMenu({ profileButton, dropdown, logoutButton });
 
 document.addEventListener("click", function (event) {
   dropdown.classList.add("hidden");
@@ -47,12 +29,6 @@ document.addEventListener("click", function (event) {
     stadiumButton.classList.remove("open");
     stadiumButton.setAttribute("aria-expanded", "false");
   }
-});
-
-logoutButton.addEventListener("click", function (event) {
-  event.preventDefault();
-  localStorage.clear();
-  window.location.href = "./login.html";
 });
 
 stadiumButton.addEventListener("click", function (event) {
@@ -126,33 +102,8 @@ keywordInput.addEventListener("keydown", function (event) {
   }
 });
 
-async function fetchUser() {
-  if (!accessToken) return null;
-
-  try {
-    const response = await fetch(`${API_BASE_URL}/users/me`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    });
-
-    if (!response.ok) return null;
-    return await response.json();
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-}
-
 async function loadLoginUserProfile() {
-  const user = await fetchUser();
-  if (!user) return;
-  profileButton.src = getProfileImage(user.image);
-}
-
-function formatDate(dateString) {
-  if (!dateString) return "";
-  return dateString.replace("T", " ").slice(0, 16);
+  await AppCommon.loadProfileImage(profileButton);
 }
 
 function createPostCard(post) {
@@ -164,7 +115,7 @@ function createPostCard(post) {
       <div class="post-content">
         <div class="post-title-row">
           <h2>${post.subject}</h2>
-          <span class="post-date">${formatDate(post.date)}</span>
+          <span class="post-date">${AppCommon.formatDate(post.date)}</span>
         </div>
 
         <div class="post-stats">
@@ -176,7 +127,7 @@ function createPostCard(post) {
 
       <div class="post-author">
         <img
-          src="${getProfileImage(post.image)}"
+          src="${AppCommon.getProfileImage(post.image)}"
           alt="작성자 프로필"
           class="author-image"
         />
@@ -222,13 +173,7 @@ async function loadPosts() {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/posts?${params.toString()}`);
-
-    if (!response.ok) {
-      throw new Error("게시글 목록 조회 실패");
-    }
-
-    const data = await response.json();
+    const data = await AppCommon.request(`/posts?${params.toString()}`);
 
     const posts = Array.isArray(data) ? data : (data.content ?? []);
     totalPages = Array.isArray(data) ? 1 : (data.totalPages ?? 1);

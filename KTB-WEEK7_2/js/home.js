@@ -1,6 +1,3 @@
-const API_BASE_URL = "http://localhost:8080";
-const DEFAULT_PROFILE_IMAGE = "./assets/images/defaultProfileImage.png";
-
 const profileButton = document.querySelector("#profileButton");
 const dropdown = document.querySelector(".dropdown");
 const logoutButton = document.querySelector("#logoutButton");
@@ -51,50 +48,15 @@ const MOCK_GAMES = [
 let games = [];
 let currentGameIndex = 0;
 
-function getProfileImage(image) {
-  return image || DEFAULT_PROFILE_IMAGE;
-}
-
-profileButton.addEventListener("click", function (event) {
-  event.stopPropagation();
-  dropdown.classList.toggle("hidden");
-});
-
-document.addEventListener("click", function () {
-  dropdown.classList.add("hidden");
-});
-
-logoutButton.addEventListener("click", function (event) {
-  event.preventDefault();
-  localStorage.clear();
-  window.location.href = "./login.html";
-});
+AppCommon.setupProfileMenu({ profileButton, dropdown, logoutButton });
 
 async function loadLoginUserProfile() {
-  if (!accessToken) return;
-
-  try {
-    const response = await fetch(`${API_BASE_URL}/users/me`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    });
-
-    if (!response.ok) return;
-
-    const user = await response.json();
-    profileButton.src = getProfileImage(user.image);
-  } catch (error) {
-    console.error(error);
-  }
+  await AppCommon.loadProfileImage(profileButton);
 }
 
 async function loadLatestNotice() {
   try {
-    const response = await fetch(`${API_BASE_URL}/notices?page=0&size=1`);
-    if (!response.ok) throw new Error();
-
-    const data = await response.json();
+    const data = await AppCommon.request("/notices?page=0&size=1");
     const notices = Array.isArray(data) ? data : (data.content ?? []);
 
     if (notices.length > 0) {
@@ -107,10 +69,7 @@ async function loadLatestNotice() {
 
 async function loadTodayGames() {
   try {
-    const response = await fetch(`${API_BASE_URL}/games/today`);
-    if (!response.ok) throw new Error();
-
-    games = await response.json();
+    games = await AppCommon.request("/games/today");
 
     if (!Array.isArray(games) || games.length === 0) {
       games = MOCK_GAMES;

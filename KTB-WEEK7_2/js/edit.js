@@ -1,6 +1,3 @@
-const API_BASE_URL = "http://localhost:8080";
-const DEFAULT_PROFILE_IMAGE = "./assets/images/defaultProfileImage.png";
-
 const editForm = document.querySelector(".edit-form");
 const titleInput = document.querySelector("#title");
 const contentTextarea = document.querySelector("#content");
@@ -18,51 +15,26 @@ const stadiumDropdown = document.querySelector("#stadiumDropdown");
 const stadiumItems = stadiumDropdown?.querySelectorAll(".stadium-option") ?? [];
 const selectedStadiumBox = document.querySelector("#selectedStadium");
 
-const accessToken = localStorage.getItem("accessToken");
 const params = new URLSearchParams(window.location.search);
 const postId = params.get("postId");
 
 let loginUser = null;
 let selectedStadium = "";
-let patchImageUrl = null;
-
-function getProfileImage(image) {
-  return image || DEFAULT_PROFILE_IMAGE;
-}
-
 function showHelper(message) {
-  helperText.textContent = `* ${message}`;
-  helperText.style.display = "block";
+  AppCommon.setHelperText(helperText, message);
 }
 
 function hideHelper() {
-  helperText.textContent = "";
-  helperText.style.display = "none";
-}
-
-async function fetchUser() {
-  try {
-    const response = await fetch(`${API_BASE_URL}/users/me`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    });
-
-    if (!response.ok) return null;
-    return await response.json();
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
+  AppCommon.setHelperText(helperText);
 }
 
 async function loadLoginUserProfile() {
-  const user = await fetchUser();
+  const user = await AppCommon.fetchCurrentUser();
 
   if (!user) return;
 
   loginUser = user;
-  profileButton.src = getProfileImage(user.image);
+  profileButton.src = AppCommon.getProfileImage(user.image);
 }
 
 function setSelectedStadium(item) {
@@ -102,18 +74,7 @@ if (stadiumButton && stadiumDropdown) {
 
 async function loadPostDetail() {
   try {
-    const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    });
-
-    if (!response.ok) {
-      alert("게시글을 불러오지 못했습니다.");
-      return;
-    }
-
-    const post = await response.json();
+    const post = await AppCommon.request(`/posts/${postId}`, { auth: true });
 
     if (loginUser && loginUser.userId !== post.userId) {
       alert("게시글 작성자만 수정할 수 있습니다.");
@@ -136,13 +97,12 @@ async function loadPostDetail() {
 
     if (post.image) {
       fileName.textContent = "기존 이미지 있음";
-      patchImageUrl = post.image;
     } else {
       fileName.textContent = "파일을 선택해주세요.";
-      patchImageUrl = null;
     }
   } catch (error) {
     console.error(error);
+    alert("게시글을 불러오지 못했습니다.");
   }
 }
 
@@ -162,7 +122,7 @@ imageInput.addEventListener("change", function () {
   if (!file) return;
 
   fileName.textContent = file.name;
-  patchImageUrl = URL.createObjectURL(file);
+  showHelper("이미지 업로드 기능은 준비 중이며 기존 이미지는 유지됩니다.");
 });
 
 editForm.addEventListener("submit", async function (event) {
@@ -172,8 +132,7 @@ editForm.addEventListener("submit", async function (event) {
 
   const body = {
     patchSubject: titleInput.value.trim(),
-    patchText: contentTextarea.value.trim(),
-    patchImage: patchImageUrl
+    patchText: contentTextarea.value.trim()
   };
 
   if (selectedStadium) {
@@ -181,19 +140,11 @@ editForm.addEventListener("submit", async function (event) {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
+    await AppCommon.request(`/posts/${postId}`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`
-      },
-      body: JSON.stringify(body)
+      auth: true,
+      body
     });
-
-    if (!response.ok) {
-      showHelper("게시글 수정에 실패했습니다.");
-      return;
-    }
 
     window.location.href = `./postDetails.html?postId=${postId}`;
   } catch (error) {
@@ -204,20 +155,11 @@ editForm.addEventListener("submit", async function (event) {
 
 backButton.href = `./postDetails.html?postId=${postId}`;
 
-profileButton.addEventListener("click", function (event) {
-  event.stopPropagation();
-  dropdown.classList.toggle("hidden");
-});
+AppCommon.setupProfileMenu({ profileButton, dropdown, logoutButton });
 
 document.addEventListener("click", function (event) {
   dropdown.classList.add("hidden");
   stadiumDropdown?.classList.add("hidden");
-});
-
-logoutButton.addEventListener("click", function (event) {
-  event.preventDefault();
-  localStorage.clear();
-  window.location.href = "./login.html";
 });
 
 async function init() {

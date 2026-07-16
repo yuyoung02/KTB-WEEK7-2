@@ -1,33 +1,30 @@
-// 백서버 url
-const API_BASE_URL = "http://localhost:8080";
-
 // NOTE : HTML 태그들
 const signupForm = document.querySelector(".signup-form");
 
 const profileInput = document.querySelector("#profile");
 const profileUpload = document.querySelector(".profile-upload");
-// 이미지 처리 일단은 null로.. 
-let profileImageUrl = null;
-
 const emailInput = document.querySelector("#email");
 const passwordInput = document.querySelector("#password");
 const passwordCheckInput = document.querySelector("#password-check");
 const nicknameInput = document.querySelector("#nickname");
 
-const helperTexts = document.querySelectorAll(".helper-text");
+const helpers = {
+  email: document.querySelector("#emailHelper"),
+  password: document.querySelector("#passwordHelper"),
+  passwordCheck: document.querySelector("#passwordCheckHelper"),
+  nickname: document.querySelector("#nicknameHelper")
+};
 
 const signupSuccessModal = document.querySelector("#signupSuccessModal");
 const signupSuccessConfirm = document.querySelector("#signupSuccessConfirm");
 
 // helper text
-function showHelper(index, message) {
-  helperTexts[index].textContent = `* ${message}`;
-  helperTexts[index].style.display = "block";
+function showHelper(field, message) {
+  AppCommon.setHelperText(helpers[field], message);
 }
 
-function hideHelper(index) {
-  helperTexts[index].textContent = "";
-  helperTexts[index].style.display = "none";
+function hideHelper(field) {
+  AppCommon.setHelperText(helpers[field]);
 }
 
 
@@ -46,16 +43,16 @@ function validateEmail() {
   const email = emailInput.value.trim();
 
   if (email === "") {
-    showHelper(1, "이메일을 입력해주세요.");
+    showHelper("email", "이메일을 입력해주세요.");
     return false;
   }
 
   if (!isValidEmail(email)) {
-    showHelper(1, "올바른 이메일 형식을 입력해주세요.");
+    showHelper("email", "올바른 이메일 형식을 입력해주세요.");
     return false;
   }
 
-  hideHelper(1);
+  hideHelper("email");
   return true;
 }
 
@@ -64,16 +61,16 @@ function validatePassword() {
   const password = passwordInput.value;
 
   if (password === "") {
-    showHelper(2, "비밀번호를 입력해주세요.");
+    showHelper("password", "비밀번호를 입력해주세요.");
     return false;
   }
 
   if (!isValidPassword(password)) {
-    showHelper(2, "비밀번호는 8~20자, 영문/숫자/특수문자를 포함해야 합니다.");
+    showHelper("password", "비밀번호는 8~20자, 영문/숫자/특수문자를 포함해야 합니다.");
     return false;
   }
 
-  hideHelper(2);
+  hideHelper("password");
   return true;
 }
 
@@ -83,16 +80,16 @@ function validatePasswordCheck() {
   const passwordCheck = passwordCheckInput.value;
 
   if (passwordCheck === "") {
-    showHelper(3, "비밀번호를 한번 더 입력해주세요.");
+    showHelper("passwordCheck", "비밀번호를 한번 더 입력해주세요.");
     return false;
   }
 
   if (password !== passwordCheck) {
-    showHelper(3, "비밀번호가 일치하지 않습니다.");
+    showHelper("passwordCheck", "비밀번호가 일치하지 않습니다.");
     return false;
   }
 
-  hideHelper(3);
+  hideHelper("passwordCheck");
   return true;
 }
 
@@ -101,16 +98,16 @@ function validateNickname() {
   const nickname = nicknameInput.value.trim();
 
   if (nickname === "") {
-    showHelper(4, "닉네임을 입력해주세요.");
+    showHelper("nickname", "닉네임을 입력해주세요.");
     return false;
   }
 
   if (nickname.length > 30) {
-    showHelper(4, "닉네임은 최대 30자까지 가능합니다.");
+    showHelper("nickname", "닉네임은 최대 30자까지 가능합니다.");
     return false;
   }
 
-  hideHelper(4);
+  hideHelper("nickname");
   return true;
 }
 
@@ -161,43 +158,27 @@ signupForm.addEventListener("submit", async function (event) {
     return;
   }
 
-  // TODO : 이미지 
-  const image = null;
-
   try {
-    const response = await fetch(`${API_BASE_URL}/users/signup`, {
+    await AppCommon.request("/users/signup", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
+      body: {
         email: emailInput.value.trim(),
         password: passwordInput.value,
         nickname: nicknameInput.value.trim(),
-        // TODO : 이미지 
         image: null
-      })
+      }
     });
-
-    if (response.status === 409) {
-      showHelper(1, "이미 사용 중인 이메일 또는 닉네임입니다.");
-      return;
-    }
-
-    if (response.status === 400) {
-      showHelper(1, "입력값을 다시 확인해주세요.");
-      return;
-    }
-
-    if (!response.ok) {
-      showHelper(1, "회원가입에 실패했습니다.");
-      return;
-    }
 
     signupSuccessModal.classList.remove("hidden");
   } catch (error) {
     console.error(error);
-    showHelper(1, "서버와 연결할 수 없습니다.");
+    if (error.status === 409) {
+      showHelper("email", "이미 사용 중인 이메일 또는 닉네임입니다.");
+    } else if (error.status === 400) {
+      showHelper("email", "입력값을 다시 확인해주세요.");
+    } else {
+      showHelper("email", "회원가입에 실패했거나 서버와 연결할 수 없습니다.");
+    }
   }
 });
 

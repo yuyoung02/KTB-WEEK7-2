@@ -33,6 +33,7 @@ body {
 
 .header-top {
   position: relative;
+  z-index: 100;
   width: calc(100% - 32px);
   max-width: 1180px;
   height: 104px;
@@ -81,7 +82,7 @@ body {
   padding: 0;
   list-style: none;
   background: #d9d9d9;
-  z-index: 30;
+  z-index: 1000;
 }
 
 .dropdown li {
@@ -100,6 +101,8 @@ body {
 }
 
 .header-nav {
+  position: relative;
+  z-index: 1;
   height: 54px;
   border-top: 1px solid var(--border);
 
