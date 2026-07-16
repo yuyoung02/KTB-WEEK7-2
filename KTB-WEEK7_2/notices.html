@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>공지사항</title>
+  <link rel="stylesheet" href="./css/notices.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="header-top">
+      <a href="./home.html" class="logo">
+        <h1>⚾️ 야구 = 질병 ⚾️</h1>
+      </a>
+
+      <div class="profile-menu">
+        <img
+          src="./assets/images/defaultProfileImage.png"
+          class="header-profile-image"
+          id="profileButton"
+          alt="프로필"
+        />
+
+        <ul class="dropdown hidden">
+          <li><a href="./userEdit.html">마이페이지</a></li>
+          <li><a href="./passwordEdit.html">비밀번호수정</a></li>
+          <li><a href="./login.html" id="logoutButton">로그아웃</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <nav class="header-nav">
+      <a href="./posts.html">구장 이야기</a>
+      <a href="./home.html#predictions">승부 예측</a>
+      <a href="./home.html#ranking">시즌 랭킹</a>
+      <a href="./notices.html" class="active">공지사항</a>
+    </nav>
+  </header>
+
+  <main class="notice-page">
+    <section class="notice-container">
+      <div class="page-title-row">
+        <div>
+          <p class="eyebrow">NOTICE</p>
+          <h2>공지사항</h2>
+          <p class="page-description">
+            커뮤니티 운영 소식과 경기 관련 안내를 확인해보세요.
+          </p>
+        </div>
+
+        <!-- ADMIN에게만 보이도록 JS에서 제어 -->
+        <a href="./noticeWrite.html" class="notice-write-button hidden" id="noticeWriteButton">
+          공지 작성
+        </a>
+      </div>
+
+      <div class="notice-filter-row">
+        <button type="button" class="filter-button active" data-type="">
+          전체
+        </button>
+        <button type="button" class="filter-button" data-type="GENERAL">
+          일반 공지
+        </button>
+        <button type="button" class="filter-button" data-type="GAME">
+          경기 공지
+        </button>
+      </div>
+
+      <section class="notice-list" id="noticeList">
+        <!-- 예시 카드 -->
+        <article class="notice-card pinned">
+          <a href="./noticeDetails.html?noticeId=1" class="notice-link">
+            <div class="notice-main">
+              <div class="notice-badge-row">
+                <span class="notice-badge general">공지</span>
+                <span class="pin-badge">중요</span>
+              </div>
+
+              <h3>야구 직관 커뮤니티 이용 안내</h3>
+
+              <p class="notice-preview">
+                구장 이야기 게시판 이용 방법과 승부 예측 참여 정책을 안내드립니다.
+              </p>
+            </div>
+
+            <div class="notice-meta">
+              <span>관리자</span>
+              <span>2026.07.15</span>
+            </div>
+          </a>
+        </article>
+
+        <article class="notice-card">
+          <a href="./noticeDetails.html?noticeId=2" class="notice-link">
+            <div class="notice-main">
+              <div class="notice-badge-row">
+                <span class="notice-badge game">경기 공지</span>
+              </div>
+
+              <h3>7월 15일 잠실 경기 우천 취소 안내</h3>
+
+              <p class="notice-preview">
+                우천으로 인해 오늘 예정된 경기가 취소되었습니다.
+              </p>
+            </div>
+
+            <div class="notice-meta">
+              <span>관리자</span>
+              <span>2026.07.15</span>
+            </div>
+          </a>
+        </article>
+      </section>
+
+      <nav class="pagination" aria-label="공지사항 페이지">
+        <button type="button" class="page-button" id="prevPage">‹</button>
+        <div class="page-numbers" id="pageNumbers"></div>
+        <button type="button" class="page-button" id="nextPage">›</button>
+      </nav>
+    </section>
+  </main>
+
+  <script src="./js/notices.js"></script>
+</body>
+</html>

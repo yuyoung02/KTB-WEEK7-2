@@ -7,9 +7,12 @@
   <link rel="stylesheet" href="./css/posts.css" />
 </head>
 <body>
-  <header class="header">
-    <a href="./posts.html" class="logo">
-      <h1>아무 말 대잔치</h1>
+<header class="header">
+
+  <div class="header-top">
+
+    <a href="./home.html" class="logo">
+      <h1>⚾️ 야구 = 질병 ⚾️</h1>
     </a>
 
     <div class="profile-menu">
@@ -21,25 +24,190 @@
       />
 
       <ul class="dropdown hidden">
-        <li><a href="./userEdit.html">회원정보수정</a></li>
+        <li><a href="./userEdit.html">마이페이지</a></li>
         <li><a href="./passwordEdit.html">비밀번호수정</a></li>
         <li><a href="./login.html" id="logoutButton">로그아웃</a></li>
       </ul>
     </div>
-  </header>
+
+  </div>
+
+  <nav class="header-nav">
+    <a href="./posts.html" class="active">구장 이야기</a>
+    <a href="./predictions.html">승부 예측</a>
+    <a href="./home.html#ranking">시즌 랭킹</a>
+    <a href="./notices.html">공지사항</a>
+  </nav>
+
+</header>
 
   <main class="posts-page">
     <section class="posts-container">
-      <p class="welcome-text">
-        안녕하세요,<br />
-        아무 말 대잔치 게시판 입니다.
-      </p>
+      <div class="page-title-row">
+        <div>
+          <p class="eyebrow">BALLPARK STORY</p>
+          <h2>구장 이야기</h2>
+          <p class="page-description">
+            직관 전후에 들르기 좋은 맛집과 핫플을 공유해보세요.
+          </p>
+        </div>
+      </div>
+
+      <div class="filter-row">
+        <!-- 구장 선택 커스텀 드롭다운 -->
+        <div class="stadium-filter">
+          <button
+            type="button"
+            class="stadium-button"
+            id="stadiumButton"
+            aria-expanded="false"
+            aria-controls="stadiumDropdown"
+          >
+            <span class="selected-stadium" id="selectedStadium">
+              <span class="all-stadium-icon">⚾</span>
+              <span class="selected-stadium-name">전체 구장</span>
+            </span>
+
+            <span class="chevron" aria-hidden="true"></span>
+          </button>
+
+          <ul class="stadium-dropdown hidden" id="stadiumDropdown">
+            <li class="stadium-option" data-value="">
+              <span class="option-logo-wrap single">
+                <span class="all-stadium-icon">⚾</span>
+              </span>
+              <span class="option-name">전체 구장</span>
+            </li>
+
+            <li class="stadium-option" data-value="JAMSIL">
+              <span class="option-logo-wrap double">
+                <img
+                  src="./assets/images/teams/lg.svg"
+                  alt="LG 트윈스"
+                  class="team-logo"
+                />
+                <span> </span>
+                <img
+                  src="./assets/images/teams/doosan.svg"
+                  alt="두산 베어스"
+                  class="team-logo"
+                />
+              </span>
+              <span class="option-name">잠실야구장</span>
+            </li>
+
+            <li class="stadium-option" data-value="DAEJEON">
+              <span class="option-logo-wrap single">
+                <img
+                  src="./assets/images/teams/hanwha.svg"
+                  alt="한화 이글스"
+                  class="team-logo"
+                />
+              </span>
+              <span class="option-name">대전 한화생명 볼파크</span>
+            </li>
+
+            <li class="stadium-option" data-value="GOCHEOK">
+              <span class="option-logo-wrap single">
+                <img
+                  src="./assets/images/teams/kiwoom.svg"
+                  alt="키움 히어로즈"
+                  class="team-logo"
+                />
+              </span>
+              <span class="option-name">고척스카이돔</span>
+            </li>
+
+            <li class="stadium-option" data-value="SUWON">
+              <span class="option-logo-wrap single">
+                <img
+                  src="./assets/images/teams/kt.svg"
+                  alt="KT 위즈"
+                  class="team-logo"
+                />
+              </span>
+              <span class="option-name">수원 KT위즈파크</span>
+            </li>
+
+            <li class="stadium-option" data-value="INCHEON">
+              <span class="option-logo-wrap single">
+                <img
+                  src="./assets/images/teams/ssg.svg"
+                  alt="SSG 랜더스"
+                  class="team-logo"
+                />
+              </span>
+              <span class="option-name">인천 SSG랜더스필드</span>
+            </li>
+
+            <li class="stadium-option" data-value="DAEGU">
+              <span class="option-logo-wrap single">
+                <img
+                  src="./assets/images/teams/samsung.svg"
+                  alt="삼성 라이온즈"
+                  class="team-logo"
+                />
+              </span>
+              <span class="option-name">대구 삼성라이온즈파크</span>
+            </li>
+
+            <li class="stadium-option" data-value="GWANGJU">
+              <span class="option-logo-wrap single">
+                <img
+                  src="./assets/images/teams/kia.svg"
+                  alt="KIA 타이거즈"
+                  class="team-logo"
+                />
+              </span>
+              <span class="option-name">광주 챔피언스필드</span>
+            </li>
+
+            <li class="stadium-option" data-value="BUSAN">
+              <span class="option-logo-wrap single">
+                <img
+                  src="./assets/images/teams/lotte.svg"
+                  alt="롯데 자이언츠"
+                  class="team-logo"
+                />
+              </span>
+              <span class="option-name">부산 사직야구장</span>
+            </li>
+
+            <li class="stadium-option" data-value="CHANGWON">
+              <span class="option-logo-wrap single">
+                <img
+                  src="./assets/images/teams/nc.svg"
+                  alt="NC 다이노스"
+                  class="team-logo"
+                />
+              </span>
+              <span class="option-name">창원 NC파크</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 검색 -->
+        <div class="search-box">
+          <input
+            id="keywordInput"
+            type="search"
+            placeholder="맛집, 카페, 술집 등 검색"
+          />
+          <button type="button" id="searchButton">검색</button>
+        </div>
+      </div>
 
       <div class="write-button-wrap">
         <a href="./write.html" class="write-button">게시글 작성</a>
       </div>
 
       <section class="post-list"></section>
+
+      <nav class="pagination" aria-label="게시글 페이지">
+        <button type="button" class="page-button" id="prevPage">‹</button>
+        <div class="page-numbers" id="pageNumbers"></div>
+        <button type="button" class="page-button" id="nextPage">›</button>
+      </nav>
     </section>
   </main>
 

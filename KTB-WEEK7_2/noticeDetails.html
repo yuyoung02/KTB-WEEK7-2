@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>공지사항 상세</title>
+  <link rel="stylesheet" href="./css/noticeDetails.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="header-top">
+      <a href="./home.html" class="logo">
+        <h1>⚾️ 야구 = 질병 ⚾️</h1>
+      </a>
+
+      <div class="profile-menu">
+        <img
+          src="./assets/images/defaultProfileImage.png"
+          class="header-profile-image"
+          id="profileButton"
+          alt="프로필"
+        />
+
+        <ul class="dropdown hidden">
+          <li><a href="./userEdit.html">마이페이지</a></li>
+          <li><a href="./passwordEdit.html">비밀번호수정</a></li>
+          <li><a href="./login.html" id="logoutButton">로그아웃</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <nav class="header-nav">
+      <a href="./posts.html">구장 이야기</a>
+      <a href="./home.html#predictions">승부 예측</a>
+      <a href="./home.html#ranking">시즌 랭킹</a>
+      <a href="./notices.html" class="active">공지사항</a>
+    </nav>
+  </header>
+
+  <main class="notice-detail-page">
+    <article class="notice-detail-container">
+      <div class="detail-top-row">
+        <a href="./notices.html" class="back-link"> 공지사항 목록</a>
+
+        <!-- ADMIN에게만 보이도록 JS에서 제어 -->
+        <div class="admin-button-row hidden" id="adminButtonRow">
+          <a href="./noticeEdit.html" class="admin-button outline" id="noticeEditButton">
+            수정
+          </a>
+          <button type="button" class="admin-button danger" id="noticeDeleteButton">
+            삭제
+          </button>
+        </div>
+      </div>
+
+      <section class="notice-header">
+        <div class="notice-badge-row">
+          <span class="notice-badge general" id="noticeTypeBadge">
+            일반 공지
+          </span>
+          <span class="pin-badge hidden" id="pinBadge">
+            중요
+          </span>
+        </div>
+
+        <h2 id="noticeTitle">야구 직관 커뮤니티 이용 안내</h2>
+
+        <div class="notice-meta">
+          <span id="noticeAuthor">관리자</span>
+          <span class="meta-divider">·</span>
+          <span id="noticeDate">2026.07.15 10:00</span>
+        </div>
+      </section>
+
+      <section class="notice-content" id="noticeContent">
+        <p>
+          안녕하세요. 야구 직관 커뮤니티입니다.
+        </p>
+
+        <p>
+          구장 이야기 게시판에서는 각 야구장 주변의 맛집, 카페,
+          술집과 같은 다양한 정보를 자유롭게 공유할 수 있습니다.
+        </p>
+
+        <p>
+          경기별 승부 예측은 경기 시작 전까지만 참여할 수 있으며,
+          경기 결과 확정 후 적중한 사용자에게 시즌 포인트가 지급됩니다.
+        </p>
+      </section>
+
+      <div class="bottom-button-row">
+        <a href="./notices.html" class="list-button">목록으로</a>
+      </div>
+    </article>
+  </main>
+
+  <div class="modal-overlay hidden" id="deleteModal">
+    <div class="modal">
+      <h3>공지사항을 삭제하시겠습니까?</h3>
+      <p>삭제한 내용은 복구할 수 없습니다.</p>
+
+      <div class="modal-button-row">
+        <button type="button" class="modal-cancel-button" id="deleteCancelButton">
+          취소
+        </button>
+        <button type="button" class="modal-confirm-button" id="deleteConfirmButton">
+          삭제
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./js/noticeDetails.js"></script>
+</body>
+</html>

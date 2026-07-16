@@ -1,64 +1,142 @@
 const API_BASE_URL = "http://localhost:8080";
-// const DEFAULT_PROFILE_IMAGE = "./assets/images/defaultProfileImage.png";
+const DEFAULT_PROFILE_IMAGE = "./assets/images/defaultProfileImage.png";
 
 const profileButton = document.querySelector("#profileButton");
 const dropdown = document.querySelector(".dropdown");
 const logoutButton = document.querySelector("#logoutButton");
 const postList = document.querySelector(".post-list");
 
+const stadiumButton = document.querySelector("#stadiumButton");
+const stadiumDropdown = document.querySelector("#stadiumDropdown");
+const stadiumItems = stadiumDropdown.querySelectorAll(".stadium-option");
+const selectedStadiumBox = document.querySelector("#selectedStadium");
+
+const keywordInput = document.querySelector("#keywordInput");
+const searchButton = document.querySelector("#searchButton");
+const prevPageButton = document.querySelector("#prevPage");
+const nextPageButton = document.querySelector("#nextPage");
+const pageNumbers = document.querySelector("#pageNumbers");
+
 const accessToken = localStorage.getItem("accessToken");
 
-// 로그인 여부 확인
-if (!accessToken) {
-  alert("로그인이 필요합니다.");
-  window.location.href = "./login.html";
+let selectedStadium = "";
+let currentPage = 0;
+const pageSize = 10;
+let totalPages = 1;
+
+function getProfileImage(image) {
+  return image || DEFAULT_PROFILE_IMAGE;
 }
 
-// 프사 버튼 -> 드롭다운
 profileButton.addEventListener("click", function (event) {
   event.stopPropagation();
   dropdown.classList.toggle("hidden");
+  stadiumDropdown.classList.add("hidden");
+  stadiumButton.classList.remove("open");
 });
 
-document.addEventListener("click", function () {
+dropdown.addEventListener("click", function (event) {
+  event.stopPropagation();
+});
+
+document.addEventListener("click", function (event) {
   dropdown.classList.add("hidden");
+
+  if (!event.target.closest(".stadium-filter")) {
+    stadiumDropdown.classList.add("hidden");
+    stadiumButton.classList.remove("open");
+    stadiumButton.setAttribute("aria-expanded", "false");
+  }
 });
 
 logoutButton.addEventListener("click", function (event) {
   event.preventDefault();
-
   localStorage.clear();
   window.location.href = "./login.html";
 });
 
-// TODO : 이미지 구현
-function getProfileImage(image) {
-  return null;
+stadiumButton.addEventListener("click", function (event) {
+  event.stopPropagation();
+
+  const isOpening = stadiumDropdown.classList.contains("hidden");
+
+  stadiumDropdown.classList.toggle("hidden");
+  stadiumButton.classList.toggle("open", isOpening);
+  stadiumButton.setAttribute("aria-expanded", String(isOpening));
+});
+
+function selectStadiumItem(item) {
+  selectedStadium = item.dataset.value;
+
+  stadiumItems.forEach(function (stadiumItem) {
+    stadiumItem.classList.remove("active");
+  });
+
+  item.classList.add("active");
+
+  const logoWrap = item.querySelector(".option-logo-wrap");
+  const optionName = item.querySelector(".option-name");
+
+  selectedStadiumBox.innerHTML = `
+    <span class="option-logo-wrap ${logoWrap.classList.contains("double") ? "double" : "single"}">
+      ${logoWrap.innerHTML}
+    </span>
+    <span class="selected-stadium-name">${optionName.textContent}</span>
+  `;
+
+  stadiumDropdown.classList.add("hidden");
+  stadiumButton.classList.remove("open");
+  stadiumButton.setAttribute("aria-expanded", "false");
 }
 
-// 날짜 포맷
-function formatDate(dateString) {
-  if (!dateString) {
-    return "";
+stadiumItems.forEach(function (item) {
+  item.addEventListener("click", function (event) {
+    event.stopPropagation();
+    selectStadiumItem(item);
+    currentPage = 0;
+    loadPosts();
+  });
+});
+
+function applyInitialStadiumFromQuery() {
+  const params = new URLSearchParams(window.location.search);
+  const stadium = params.get("stadium");
+
+  if (!stadium) return;
+
+  const item = [...stadiumItems].find(
+    (stadiumItem) => stadiumItem.dataset.value === stadium
+  );
+
+  if (item) {
+    selectStadiumItem(item);
   }
-
-  return dateString.replace("T", " ").slice(0, 19);
 }
 
-// 사용자 정보 조회
-async function fetchUser(accessToken) {
+searchButton.addEventListener("click", function () {
+  currentPage = 0;
+  loadPosts();
+});
+
+keywordInput.addEventListener("keydown", function (event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    currentPage = 0;
+    loadPosts();
+  }
+});
+
+async function fetchUser() {
+  if (!accessToken) return null;
+
   try {
     const response = await fetch(`${API_BASE_URL}/users/me`, {
-      method: "GET",
       headers: {
-        "Authorization": `Bearer ${accessToken}`
+        Authorization: `Bearer ${accessToken}`
       }
     });
 
-    if (!response.ok) {
-      return null;
-    }
-
+    if (!response.ok) return null;
     return await response.json();
   } catch (error) {
     console.error(error);
@@ -66,31 +144,20 @@ async function fetchUser(accessToken) {
   }
 }
 
-// 댓글 개수 조회
-async function fetchCommentCount(postId) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments`);
-
-    if (!response.ok) {
-      return 0;
-    }
-
-    const comments = await response.json();
-    return comments.length;
-  } catch (error) {
-    console.error(error);
-    return 0;
-  }
+async function loadLoginUserProfile() {
+  const user = await fetchUser();
+  if (!user) return;
+  profileButton.src = getProfileImage(user.image);
 }
 
-// 게시글 카드 생성
-function createPostCard(post, commentCount) {
+function formatDate(dateString) {
+  if (!dateString) return "";
+  return dateString.replace("T", " ").slice(0, 16);
+}
+
+function createPostCard(post) {
   const article = document.createElement("article");
   article.className = "post-card";
-  
-  const nickname = post.userNickname;
-
-  const authorImage = getProfileImage(post.image);
 
   article.innerHTML = `
     <a href="./postDetails.html?postId=${post.postId}" class="post-link">
@@ -101,19 +168,19 @@ function createPostCard(post, commentCount) {
         </div>
 
         <div class="post-stats">
-          <span>좋아요 ${post.likeCount}</span>
-          <span>댓글 ${commentCount}</span>
-          <span>조회수 ${post.viewNum}</span>
+          <span>좋아요 ${post.likeCount ?? 0}</span>
+          <span>댓글 ${post.commentCount ?? 0}</span>
+          <span>조회수 ${post.viewNum ?? 0}</span>
         </div>
       </div>
 
       <div class="post-author">
         <img
-          src="${authorImage}"
+          src="${getProfileImage(post.image)}"
           alt="작성자 프로필"
           class="author-image"
         />
-        <span>${nickname}</span>
+        <span>${post.userNickname ?? post.nickname ?? "알 수 없는 사용자"}</span>
       </div>
     </a>
   `;
@@ -121,53 +188,106 @@ function createPostCard(post, commentCount) {
   return article;
 }
 
-// 로그인한 사용자 프로필 조회
-async function loadLoginUserProfile() {
-  const user = await fetchUser(accessToken);
+function renderPosts(posts) {
+  postList.innerHTML = "";
 
-  if (!user) {
+  if (!posts.length) {
+    postList.innerHTML = `
+      <p style="text-align:center; color:#6b7280; padding:40px 0;">
+        등록된 게시글이 없습니다.
+      </p>
+    `;
     return;
   }
 
-  profileButton.src = getProfileImage(user.image);
-
-  localStorage.setItem("nickname", user.nickname);
-  if (user.image) {
-    localStorage.setItem("profileImage", user.image);
-  }
+  posts.forEach(function (post) {
+    postList.appendChild(createPostCard(post));
+  });
 }
 
-// 게시글 목록 조회
 async function loadPosts() {
+  const params = new URLSearchParams({
+    page: String(currentPage),
+    size: String(pageSize)
+  });
+
+  if (selectedStadium) {
+    params.append("stadium", selectedStadium);
+  }
+
+  const keyword = keywordInput.value.trim();
+
+  if (keyword) {
+    params.append("keyword", keyword);
+  }
+
   try {
-    const response = await fetch(`${API_BASE_URL}/posts`);
+    const response = await fetch(`${API_BASE_URL}/posts?${params.toString()}`);
 
     if (!response.ok) {
-      postList.innerHTML = `<p>게시글을 불러오지 못했습니다.</p>`;
-      return;
+      throw new Error("게시글 목록 조회 실패");
     }
 
-    const posts = await response.json();
-    
+    const data = await response.json();
 
-    postList.innerHTML = "";
+    const posts = Array.isArray(data) ? data : (data.content ?? []);
+    totalPages = Array.isArray(data) ? 1 : (data.totalPages ?? 1);
+    currentPage = Array.isArray(data) ? 0 : (data.number ?? currentPage);
 
-    if (posts.length === 0) {
-      postList.innerHTML = `<p>작성된 게시글이 없습니다.</p>`;
-      return;
-    }
-
-    for (const post of posts) {
-      const commentCount = await fetchCommentCount(post.postId);
-
-      const postCard = createPostCard(post, commentCount);
-      postList.appendChild(postCard);
-    }
+    renderPosts(posts);
+    renderPagination();
   } catch (error) {
     console.error(error);
-    postList.innerHTML = `<p>서버와 연결할 수 없습니다.</p>`;
+    postList.innerHTML = `
+      <p style="text-align:center; color:#6b7280; padding:40px 0;">
+        게시글을 불러오지 못했습니다.
+      </p>
+    `;
   }
 }
 
+function renderPagination() {
+  pageNumbers.innerHTML = "";
+
+  prevPageButton.disabled = currentPage <= 0;
+  nextPageButton.disabled = currentPage >= totalPages - 1;
+
+  const groupSize = 5;
+  const startPage = Math.floor(currentPage / groupSize) * groupSize;
+  const endPage = Math.min(startPage + groupSize, totalPages);
+
+  for (let page = startPage; page < endPage; page++) {
+    const button = document.createElement("button");
+
+    button.type = "button";
+    button.className = "page-number";
+    button.textContent = String(page + 1);
+
+    if (page === currentPage) {
+      button.classList.add("active");
+    }
+
+    button.addEventListener("click", function () {
+      currentPage = page;
+      loadPosts();
+    });
+
+    pageNumbers.appendChild(button);
+  }
+}
+
+prevPageButton.addEventListener("click", function () {
+  if (currentPage <= 0) return;
+  currentPage--;
+  loadPosts();
+});
+
+nextPageButton.addEventListener("click", function () {
+  if (currentPage >= totalPages - 1) return;
+  currentPage++;
+  loadPosts();
+});
+
+applyInitialStadiumFromQuery();
 loadLoginUserProfile();
 loadPosts();

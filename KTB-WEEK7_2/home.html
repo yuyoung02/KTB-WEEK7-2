@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>야구는 질병이다</title>
+  <link rel="stylesheet" href="./css/home.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="header-top">
+      <a href="./home.html" class="logo">
+        <h1>⚾️ 야구 = 질병 ⚾️</h1>
+      </a>
+
+      <div class="profile-menu">
+        <img
+          src="./assets/images/defaultProfileImage.png"
+          class="header-profile-image"
+          id="profileButton"
+          alt="프로필"
+        />
+
+        <ul class="dropdown hidden">
+          <li><a href="./userEdit.html">마이페이지</a></li>
+          <li><a href="./passwordEdit.html">비밀번호수정</a></li>
+          <li><a href="./login.html" id="logoutButton">로그아웃</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <nav class="header-nav">
+      <a href="./posts.html">구장 이야기</a>
+      <a href="./predictions.html">승부 예측</a>
+      <a href="#ranking">시즌 랭킹</a>
+      <a href="./notices.html">공지사항</a>
+    </nav>
+  </header>
+
+  <main class="home-page">
+    <section class="home-container">
+      <section class="hero">
+        <p class="hero-label">BALLPARK COMMUNITY</p>
+        <h2>직관 가기 전부터<br />경기 끝난 뒤까지.</h2>
+        <p class="hero-description">
+          구장 주변 맛집과 핫플을 공유하고,<br />
+          오늘의 경기 승부를 예측해보세요.
+        </p>
+        <a href="./posts.html" class="primary-button">구장 이야기 보러가기</a>
+      </section>
+
+      <a href="./notices.html" class="notice-banner" aria-label="공지사항">
+        <div>
+          <span class="section-badge">NOTICE</span>
+          <strong id="noticeTitle">오늘의 공지사항이 여기에 표시됩니다.</strong>
+        </div>
+        <span class="notice-arrow">›</span>
+      </a>
+
+      <!-- 오늘의 승부 예측 -->
+<section class="section-block" id="predictions">
+  <div class="section-title-row">
+    <div>
+      <span class="section-badge">TODAY</span>
+      <h3>오늘의 승부 예측</h3>
+    </div>
+
+    <a href="./predictions.html" class="text-link">전체 보기</a>
+  </div>
+
+  <div class="prediction-slider">
+
+    <!-- 이전 경기 -->
+    <button
+      type="button"
+      class="slider-button prev"
+      id="prevGameButton"
+      aria-label="이전 경기"
+    >
+      ‹
+    </button>
+
+    <!-- 경기 카드가 표시되는 영역 -->
+    <div class="prediction-slide" id="predictionSlide">
+
+      <article class="prediction-card featured">
+        <div class="game-meta">
+          <div class="game-info">
+            <span class="game-date">7월 16일 목요일</span>
+            <span>18:30 · 대전</span>
+          </div>
+
+          <span class="game-status">예측 진행중</span>
+        </div>
+
+        <div class="matchup">
+
+          <!-- 원정팀 -->
+          <div class="team">
+            <div class="team-title">
+              <img
+                src="./assets/images/teams/kiwoom.svg"
+                alt="키움 히어로즈"
+                class="team-logo"
+              />
+              <span class="team-code">키움</span>
+            </div>
+
+            <span class="starting-pitcher">
+              선발 알칸타라
+            </span>
+          </div>
+
+          <!-- VS -->
+          <div class="versus">
+            <strong>VS</strong>
+            <span>대전</span>
+          </div>
+
+          <!-- 홈팀 -->
+          <div class="team">
+            <div class="team-title">
+              <img
+                src="./assets/images/teams/hanwha.svg"
+                alt="한화 이글스"
+                class="team-logo"
+              />
+              <span class="team-code">한화</span>
+            </div>
+
+            <span class="starting-pitcher">
+              선발 화이트
+            </span>
+          </div>
+
+        </div>
+
+        <div class="vote-buttons">
+          <button
+            type="button"
+            class="vote-button"
+            data-team="KIWOOM"
+          >
+            키움 승
+          </button>
+
+          <button
+            type="button"
+            class="vote-button"
+            data-team="HANWHA"
+          >
+            한화 승
+          </button>
+        </div>
+
+        <div class="prediction-footer">
+          <span>경기 시작 전까지 참여 가능</span>
+          <span>적중 시 +100P</span>
+        </div>
+
+        <!-- 투표 참여 후에만 표시 -->
+        <div
+          class="vote-summary hidden"
+          id="voteSummary"
+        >
+          <span>참여 128명</span>
+          <span>키움 41% · 한화 59%</span>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- 다음 경기 -->
+    <button
+      type="button"
+      class="slider-button next"
+      id="nextGameButton"
+      aria-label="다음 경기"
+    >
+      ›
+    </button>
+
+  </div>
+
+  <!-- 현재 경기 위치 -->
+  <div class="slider-pagination">
+    <span id="currentGameNumber">1</span>
+    <span>/</span>
+    <span id="totalGameCount">5</span>
+  </div>
+</section>
+
+      <section class="section-block" id="ranking">
+        <div class="section-title-row">
+          <div>
+            <span class="section-badge">RANKING</span>
+            <h3>이번 시즌 승부예측 TOP 3</h3>
+          </div>
+          <span class="section-caption">2026 시즌</span>
+        </div>
+
+        <div class="ranking-list">
+          <article class="ranking-card first">
+            <span class="rank-number">1</span>
+            <div class="ranking-user">
+              <strong>독수리우승가자</strong>
+              <span>382경기 예측 · 211경기 적중 · 적중률 55.2%</span>
+            </div>
+            <strong class="ranking-point">21,100P</strong>
+          </article>
+
+          <article class="ranking-card">
+            <span class="rank-number">2</span>
+            <div class="ranking-user">
+              <strong>잠실직관러</strong>
+              <span>371경기 예측 · 204경기 적중 · 적중률 55.0%</span>
+            </div>
+            <strong class="ranking-point">20,400P</strong>
+          </article>
+
+          <article class="ranking-card">
+            <span class="rank-number">3</span>
+            <div class="ranking-user">
+              <strong>야구없인못살아</strong>
+              <span>360경기 예측 · 198경기 적중 · 적중률 55.0%</span>
+            </div>
+            <strong class="ranking-point">19,800P</strong>
+          </article>
+        </div>
+      </section>
+
+  </main>
+
+  <script src="./js/home.js"></script>
+</body>
+</html>

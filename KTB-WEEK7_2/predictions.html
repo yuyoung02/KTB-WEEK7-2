@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>승부 예측</title>
+  <link rel="stylesheet" href="./css/predictions.css" />
+</head>
+
+<body>
+  <header class="header">
+    <div class="header-top">
+      <a href="./home.html" class="logo">
+        <h1>⚾️ 야구 = 질병 ⚾️</h1>
+      </a>
+
+      <div class="profile-menu">
+        <img
+          src="./assets/images/defaultProfileImage.svg"
+          class="header-profile-image"
+          id="profileButton"
+          alt="프로필"
+        />
+
+        <ul class="dropdown hidden">
+          <li><a href="./userEdit.html">마이페이지</a></li>
+          <li><a href="./passwordEdit.html">비밀번호수정</a></li>
+          <li><a href="./login.html" id="logoutButton">로그아웃</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <nav class="header-nav">
+      <a href="./posts.html">구장 이야기</a>
+      <a href="./predictions.html" class="active">승부 예측</a>
+      <a href="./home.html#ranking">시즌 랭킹</a>
+      <a href="./notices.html">공지사항</a>
+    </nav>
+  </header>
+
+  <main class="prediction-page">
+    <section class="prediction-container">
+
+      <div class="page-title-row">
+        <div>
+          <p class="eyebrow">GAME PREDICTION</p>
+
+          <h2>오늘의 승부 예측</h2>
+
+          <p class="page-description">
+            7월 16일 목요일 · 경기 시작 전까지 예측을 변경할 수 있습니다.
+          </p>
+        </div>
+
+        <div class="point-guide">
+          적중 시 경기당 <strong>+100P</strong>
+        </div>
+      </div>
+
+
+      <section class="game-list">
+
+        <!-- =========================
+             KT vs LG
+        ========================== -->
+        <article class="game-card">
+
+          <div class="game-meta">
+            <span>18:30 · 잠실</span>
+            <span class="game-status">예측 진행중</span>
+          </div>
+
+          <div class="matchup">
+
+            <!-- KT -->
+            <div class="team">
+
+              <div class="team-title">
+                <img
+                  src="./assets/images/teams/kt.svg"
+                  alt="KT 위즈"
+                  class="team-logo"
+                />
+
+                <span class="team-code">
+                  KT
+                </span>
+              </div>
+
+              <span class="starting-pitcher">
+                선발 로건
+              </span>
+
+            </div>
+
+
+            <!-- VS -->
+            <div class="versus">
+              <strong>VS</strong>
+              <span>잠실</span>
+            </div>
+
+
+            <!-- LG -->
+            <div class="team">
+
+              <div class="team-title">
+                <img
+                  src="./assets/images/teams/lg.svg"
+                  alt="LG 트윈스"
+                  class="team-logo"
+                />
+
+                <span class="team-code">
+                  LG
+                </span>
+              </div>
+
+              <span class="starting-pitcher">
+                선발 톨허스트
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="vote-buttons">
+
+            <button
+              type="button"
+              class="vote-button"
+              data-team="KT"
+            >
+              KT 승
+            </button>
+
+            <button
+              type="button"
+              class="vote-button"
+              data-team="LG"
+            >
+              LG 승
+            </button>
+
+          </div>
+
+          <div class="vote-summary hidden">
+            <span>참여 152명</span>
+            <span>KT 46% · LG 54%</span>
+          </div>
+
+        </article>
+
+
+        <!-- =========================
+             KIA vs SSG
+        ========================== -->
+        <article class="game-card">
+
+          <div class="game-meta">
+            <span>18:30 · 문학</span>
+            <span class="game-status">예측 진행중</span>
+          </div>
+
+          <div class="matchup">
+
+            <!-- KIA -->
+            <div class="team">
+
+              <div class="team-title">
+                <img
+                  src="./assets/images/teams/kia.svg"
+                  alt="KIA 타이거즈"
+                  class="team-logo"
+                />
+
+                <span class="team-code">
+                  KIA
+                </span>
+              </div>
+
+              <span class="starting-pitcher">
+                선발 올러
+              </span>
+
+            </div>
+
+
+            <!-- VS -->
+            <div class="versus">
+              <strong>VS</strong>
+              <span>문학</span>
+            </div>
+
+
+            <!-- SSG -->
+            <div class="team">
+
+              <div class="team-title">
+                <img
+                  src="./assets/images/teams/ssg.svg"
+                  alt="SSG 랜더스"
+                  class="team-logo"
+                />
+
+                <span class="team-code">
+                  SSG
+                </span>
+              </div>
+
+              <span class="starting-pitcher">
+                선발 애벌라
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="vote-buttons">
+
+            <button
+              type="button"
+              class="vote-button"
+              data-team="KIA"
+            >
+              KIA 승
+            </button>
+
+            <button
+              type="button"
+              class="vote-button"
+              data-team="SSG"
+            >
+              SSG 승
+            </button>
+
+          </div>
+
+          <div class="vote-summary hidden">
+            <span>참여 140명</span>
+            <span>KIA 51% · SSG 49%</span>
+          </div>
+
+        </article>
+
+
+        <!-- =========================
+             롯데 vs 삼성
+        ========================== -->
+        <article class="game-card">
+
+          <div class="game-meta">
+            <span>18:30 · 대구</span>
+            <span class="game-status">예측 진행중</span>
+          </div>
+
+          <div class="matchup">
+
+            <!-- 롯데 -->
+            <div class="team">
+
+              <div class="team-title">
+                <img
+                  src="./assets/images/teams/lotte.svg"
+                  alt="롯데 자이언츠"
+                  class="team-logo"
+                />
+
+                <span class="team-code">
+                  롯데
+                </span>
+              </div>
+
+              <span class="starting-pitcher">
+                선발 로드리게스
+              </span>
+
+            </div>
+
+
+            <!-- VS -->
+            <div class="versus">
+              <strong>VS</strong>
+              <span>대구</span>
+            </div>
+
+
+            <!-- 삼성 -->
+            <div class="team">
+
+              <div class="team-title">
+                <img
+                  src="./assets/images/teams/samsung.svg"
+                  alt="삼성 라이온즈"
+                  class="team-logo"
+                />
+
+                <span class="team-code">
+                  삼성
+                </span>
+              </div>
+
+              <span class="starting-pitcher">
+                선발 양창섭
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="vote-buttons">
+
+            <button
+              type="button"
+              class="vote-button"
+              data-team="LOTTE"
+            >
+              롯데 승
+            </button>
+
+            <button
+              type="button"
+              class="vote-button"
+              data-team="SAMSUNG"
+            >
+              삼성 승
+            </button>
+
+          </div>
+
+          <div class="vote-summary hidden">
+            <span>참여 131명</span>
+            <span>롯데 43% · 삼성 57%</span>
+          </div>
+
+        </article>
+
+
+        <!-- =========================
+             두산 vs NC
+        ========================== -->
+        <article class="game-card">
+
+          <div class="game-meta">
+            <span>18:30 · 창원</span>
+            <span class="game-status">예측 진행중</span>
+          </div>
+
+          <div class="matchup">
+
+            <!-- 두산 -->
+            <div class="team">
+
+              <div class="team-title">
+                <img
+                  src="./assets/images/teams/doosan.svg"
+                  alt="두산 베어스"
+                  class="team-logo"
+                />
+
+                <span class="team-code">
+                  두산
+                </span>
+              </div>
+
+              <span class="starting-pitcher">
+                선발 곽빈
+              </span>
+
+            </div>
+
+
+            <!-- VS -->
+            <div class="versus">
+              <strong>VS</strong>
+              <span>창원</span>
+            </div>
+
+
+            <!-- NC -->
+            <div class="team">
+
+              <div class="team-title">
+                <img
+                  src="./assets/images/teams/nc.svg"
+                  alt="NC 다이노스"
+                  class="team-logo"
+                />
+
+                <span class="team-code">
+                  NC
+                </span>
+              </div>
+
+              <span class="starting-pitcher">
+                선발 라일리
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="vote-buttons">
+
+            <button
+              type="button"
+              class="vote-button"
+              data-team="DOOSAN"
+            >
+              두산 승
+            </button>
+
+            <button
+              type="button"
+              class="vote-button"
+              data-team="NC"
+            >
+              NC 승
+            </button>
+
+          </div>
+
+          <div class="vote-summary hidden">
+            <span>참여 125명</span>
+            <span>두산 48% · NC 52%</span>
+          </div>
+
+        </article>
+
+
+        <!-- =========================
+             키움 vs 한화
+        ========================== -->
+        <article class="game-card">
+
+          <div class="game-meta">
+            <span>18:30 · 대전</span>
+            <span class="game-status">예측 진행중</span>
+          </div>
+
+          <div class="matchup">
+
+            <!-- 키움 -->
+            <div class="team">
+
+              <div class="team-title">
+                <img
+                  src="./assets/images/teams/kiwoom.svg"
+                  alt="키움 히어로즈"
+                  class="team-logo"
+                />
+
+                <span class="team-code">
+                  키움
+                </span>
+              </div>
+
+              <span class="starting-pitcher">
+                선발 알칸타라
+              </span>
+
+            </div>
+
+
+            <!-- VS -->
+            <div class="versus">
+              <strong>VS</strong>
+              <span>대전</span>
+            </div>
+
+
+            <!-- 한화 -->
+            <div class="team">
+
+              <div class="team-title">
+                <img
+                  src="./assets/images/teams/hanwha.svg"
+                  alt="한화 이글스"
+                  class="team-logo"
+                />
+
+                <span class="team-code">
+                  한화
+                </span>
+              </div>
+
+              <span class="starting-pitcher">
+                선발 화이트
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="vote-buttons">
+
+            <button
+              type="button"
+              class="vote-button"
+              data-team="KIWOOM"
+            >
+              키움 승
+            </button>
+
+            <button
+              type="button"
+              class="vote-button"
+              data-team="HANWHA"
+            >
+              한화 승
+            </button>
+
+          </div>
+
+          <div class="vote-summary hidden">
+            <span>참여 128명</span>
+            <span>키움 41% · 한화 59%</span>
+          </div>
+
+        </article>
+
+      </section>
+    </section>
+  </main>
+
+  <script src="./js/predictions.js"></script>
+</body>
+</html>

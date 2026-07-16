@@ -102,7 +102,7 @@ body {
   min-width: 45px;
   height: 28px;
   padding: 0 10px;
-  border: 1px solid #aca0eb;
+  border: 1px solid #1E3A5F;
   border-radius: 6px;
   background: transparent;
   color: #000;
@@ -170,7 +170,7 @@ body {
 }
 
 .like-count.active {
-  background-color: #aca0eb;
+  background-color: #1E3A5F;
   color: #fff;
 }
 
@@ -206,7 +206,7 @@ body {
   height: 39px;
   border: none;
   border-radius: 16px;
-  background-color: #aca0eb;
+  background-color: #1E3A5F;
   color: #fff;
   font-family: inherit;
   cursor: pointer;
@@ -281,7 +281,7 @@ body {
 }
 
 .confirm-button {
-  background-color: #aca0eb;
+  background-color: #1E3A5F;
   color: #fff;
 }
 

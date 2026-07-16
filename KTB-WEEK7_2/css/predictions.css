@@ -1,0 +1,520 @@
+@font-face {
+  font-family: "BMKkubulimTTF";
+  src: url("../assets/fonts/BMKkubulimTTF.ttf") format("truetype");
+}
+
+:root {
+  --primary: #1E3A5F;
+  --primary-soft: #E9EFF5;
+
+  --background: #F4F5F7;
+  --surface: #FFFFFF;
+
+  --border: #D9DEE5;
+
+  --text: #111111;
+  --subtext: #6B7280;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding-bottom: 80px;
+
+  background: var(--background);
+
+  font-family: "SandollGogoRound", sans-serif;
+
+  color: var(--text);
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+  width: 100%;
+
+  border-bottom: 1px solid #000;
+
+  background: var(--background);
+}
+
+
+.header-top {
+  position: relative;
+
+  width: calc(100% - 32px);
+  max-width: 1180px;
+
+  height: 104px;
+
+  margin: 0 auto;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+}
+
+
+.logo {
+  color: inherit;
+
+  text-decoration: none;
+
+  font-family: "BMKkubulimTTF";
+}
+
+
+.logo h1 {
+  margin: 0;
+
+  font-size: 32px;
+
+  font-weight: 400;
+}
+
+
+/* =========================
+   PROFILE
+========================= */
+
+.profile-menu {
+  position: absolute;
+
+  right: 0;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+}
+
+
+.header-profile-image {
+  width: 36px;
+  height: 36px;
+
+  border-radius: 50%;
+
+  object-fit: cover;
+
+  cursor: pointer;
+}
+
+
+.dropdown {
+  position: absolute;
+
+  top: 48px;
+  right: 0;
+
+  width: 115px;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+
+  background: #D9D9D9;
+
+  z-index: 30;
+}
+
+
+.dropdown li {
+  height: 40px;
+}
+
+
+.dropdown li a {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  color: #000;
+
+  text-decoration: none;
+
+  font-size: 12px;
+}
+
+
+.hidden {
+  display: none;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+.header-nav {
+  height: 54px;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 48px;
+}
+
+
+.header-nav a {
+  position: relative;
+
+  color: #374151;
+
+  text-decoration: none;
+
+  font-size: 14px;
+
+  font-weight: 700;
+}
+
+
+.header-nav a:hover,
+.header-nav a.active {
+  color: var(--primary);
+}
+
+
+.header-nav a.active::after {
+  content: "";
+
+  position: absolute;
+
+  left: 50%;
+
+  bottom: -18px;
+
+  width: 100%;
+  height: 2px;
+
+  background: var(--primary);
+
+  transform: translateX(-50%);
+}
+
+
+/* =========================
+   PAGE
+========================= */
+
+.prediction-page {
+  display: flex;
+
+  justify-content: center;
+}
+
+
+.prediction-container {
+  width: calc(100% - 32px);
+
+  max-width: 720px;
+
+  margin-top: 48px;
+}
+
+
+/* =========================
+   PAGE TITLE
+========================= */
+
+.page-title-row {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-end;
+}
+
+
+.eyebrow {
+  margin: 0 0 6px;
+
+  color: var(--primary);
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.12em;
+}
+
+
+.page-title-row h2 {
+  margin: 0;
+
+  font-size: 30px;
+}
+
+
+.page-description {
+  margin: 10px 0 0;
+
+  color: var(--subtext);
+
+  font-size: 14px;
+}
+
+
+.point-guide {
+  padding: 9px 12px;
+
+  border-radius: 8px;
+
+  background: var(--primary-soft);
+
+  color: var(--primary);
+
+  font-size: 12px;
+}
+
+
+/* =========================
+   GAME LIST
+========================= */
+
+.game-list {
+  margin-top: 28px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+}
+
+
+/* =========================
+   GAME CARD
+========================= */
+
+.game-card {
+  padding: 22px;
+
+  border: 1px solid transparent;
+
+  border-radius: 16px;
+
+  background: var(--surface);
+
+  box-shadow:
+    3px 4px 4px
+    rgba(204, 204, 204, 0.18);
+}
+
+
+.game-card:hover {
+  border-color: #C9D7E6;
+}
+
+
+/* =========================
+   GAME META
+========================= */
+
+.game-meta {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  color: var(--subtext);
+
+  font-size: 12px;
+}
+
+
+.game-status {
+  padding: 5px 9px;
+
+  border-radius: 999px;
+
+  background: var(--primary-soft);
+
+  color: var(--primary);
+
+  font-size: 11px;
+
+  font-weight: 800;
+}
+
+
+/* =========================
+   MATCHUP
+========================= */
+
+.matchup {
+  margin: 26px 0 22px;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    72px
+    1fr;
+
+  align-items: center;
+
+  text-align: center;
+}
+
+
+/* =========================
+   TEAM
+========================= */
+
+.team {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+
+/* 구단 로고 + 팀 이름 */
+
+.team-title {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+
+.team-logo {
+  width: 30px;
+
+  height: 30px;
+
+  object-fit: contain;
+
+  display: block;
+}
+
+
+.team-code {
+  color: #124FC4;
+
+  font-size: 21px;
+
+  font-weight: 800;
+}
+
+
+.starting-pitcher {
+  color: var(--subtext);
+
+  font-size: 12px;
+}
+
+
+/* =========================
+   VS
+========================= */
+
+.versus {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+
+  color: var(--subtext);
+
+  font-size: 11px;
+}
+
+
+.versus strong {
+  color: var(--text);
+
+  font-size: 19px;
+}
+
+
+/* =========================
+   VOTE BUTTON
+========================= */
+
+.vote-buttons {
+  display: flex;
+
+  gap: 10px;
+}
+
+
+.vote-button {
+  flex: 1;
+
+  height: 42px;
+
+  border: 1px solid var(--primary);
+
+  border-radius: 8px;
+
+  background: #fff;
+
+  color: var(--primary);
+
+  font-family: inherit;
+
+  font-size: 14px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+
+.vote-button:hover,
+.vote-button.selected {
+  background: var(--primary);
+
+  color: #fff;
+}
+
+
+/* =========================
+   VOTE RESULT
+========================= */
+
+.vote-summary {
+  margin-top: 14px;
+
+  padding-top: 14px;
+
+  border-top:
+    1px solid
+    var(--border);
+
+  display: flex;
+
+  justify-content: space-between;
+
+  color: var(--subtext);
+
+  font-size: 12px;
+}

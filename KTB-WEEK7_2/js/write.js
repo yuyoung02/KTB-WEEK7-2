@@ -1,30 +1,31 @@
 const API_BASE_URL = "http://localhost:8080";
+const DEFAULT_PROFILE_IMAGE = "./assets/images/defaultProfileImage.png";
 
-// 게시글 작성 작성 태그
 const writeForm = document.querySelector(".write-form");
-
 const titleInput = document.querySelector("#title");
 const contentTextarea = document.querySelector("#content");
 const imageInput = document.querySelector("#image");
 const fileName = document.querySelector(".file-name");
-
 const helperText = document.querySelector(".helper-text");
 
-//프사 관련 태그
 const profileButton = document.querySelector("#profileButton");
 const dropdown = document.querySelector(".dropdown");
 const logoutButton = document.querySelector(".dropdown li:last-child a");
 
+const stadiumButton = document.querySelector("#stadiumButton");
+const stadiumDropdown = document.querySelector("#stadiumDropdown");
+const stadiumItems = stadiumDropdown?.querySelectorAll(".stadium-option") ?? [];
+const selectedStadiumBox = document.querySelector("#selectedStadium");
+
 const accessToken = localStorage.getItem("accessToken");
 
+let selectedStadium = "";
 let postImageUrl = null;
 
-if (!accessToken) {
-  alert("로그인이 필요합니다.");
-  window.location.href = "./login.html";
+function getProfileImage(image) {
+  return image || DEFAULT_PROFILE_IMAGE;
 }
 
-// helper text
 function showHelper(message) {
   helperText.textContent = `* ${message}`;
   helperText.style.display = "block";
@@ -35,22 +36,51 @@ function hideHelper() {
   helperText.style.display = "none";
 }
 
-// 게시글 필수 요소 검증
-function validateWriteForm() {
-  const title = titleInput.value.trim();
-  const content = contentTextarea.value.trim();
+if (stadiumButton && stadiumDropdown) {
+  stadiumButton.addEventListener("click", function (event) {
+    event.stopPropagation();
+    stadiumDropdown.classList.toggle("hidden");
+  });
 
-  if (title === "") {
+  stadiumItems.forEach(function (item) {
+    item.addEventListener("click", function (event) {
+      event.stopPropagation();
+
+      selectedStadium = item.dataset.value;
+
+      stadiumItems.forEach(function (stadiumItem) {
+        stadiumItem.classList.remove("active");
+      });
+
+      item.classList.add("active");
+
+      const logoWrap = item.querySelector(".option-logo-wrap");
+      const optionName = item.querySelector(".option-name");
+
+      selectedStadiumBox.innerHTML = `
+        <span class="option-logo-wrap ${logoWrap.classList.contains("double") ? "double" : "single"}">
+          ${logoWrap.innerHTML}
+        </span>
+        <span>${optionName.textContent}</span>
+      `;
+
+      stadiumDropdown.classList.add("hidden");
+    });
+  });
+}
+
+function validateWriteForm() {
+  if (!selectedStadium) {
+    showHelper("구장을 선택해주세요.");
+    return false;
+  }
+
+  if (titleInput.value.trim() === "") {
     showHelper("제목을 입력해주세요.");
     return false;
   }
 
-  if (title.length > 100) {
-    showHelper("제목은 최대 100글자까지 가능합니다.");
-    return false;
-  }
-
-  if (content === "") {
+  if (contentTextarea.value.trim() === "") {
     showHelper("내용을 입력해주세요.");
     return false;
   }
@@ -59,25 +89,17 @@ function validateWriteForm() {
   return true;
 }
 
-// TODO: 이미지 구현
-function getProfileImage(image) {
-  return null;
-}
-
 async function loadLoginUserProfile() {
-  try {
-    const response = await fetch(`${API_BASE_URL}/users/me`,
-      {
-        method : "GET",
-        headers : {
-          "Authorization": `Bearer ${accessToken}`
-        }
-      }
-    );
+  if (!accessToken) return;
 
-    if (!response.ok) {
-      return;
-    }
+  try {
+    const response = await fetch(`${API_BASE_URL}/users/me`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    if (!response.ok) return;
 
     const user = await response.json();
     profileButton.src = getProfileImage(user.image);
@@ -86,7 +108,6 @@ async function loadLoginUserProfile() {
   }
 }
 
-// TODO: 이미지 구현
 imageInput.addEventListener("change", function () {
   const file = imageInput.files[0];
 
@@ -97,47 +118,28 @@ imageInput.addEventListener("change", function () {
   }
 
   fileName.textContent = file.name;
-
-  postImageUrl = null;
+  postImageUrl = URL.createObjectURL(file);
 });
 
-// 게시글 입력 항목들 이벤트 처리
-titleInput.addEventListener("input", validateWriteForm);
-contentTextarea.addEventListener("input", validateWriteForm);
-
-// 게시글 입력 폼 제출
 writeForm.addEventListener("submit", async function (event) {
   event.preventDefault();
 
-  // 최종 확인 -> 제출
-  if (!validateWriteForm()) {
-    return;
-  }
+  if (!validateWriteForm()) return;
 
   try {
     const response = await fetch(`${API_BASE_URL}/posts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${accessToken}`
+        Authorization: `Bearer ${accessToken}`
       },
       body: JSON.stringify({
         subject: titleInput.value.trim(),
         text: contentTextarea.value.trim(),
-        // TODO: 이미지 구현
+        stadium: selectedStadium,
         image: null
       })
     });
-
-    if (response.status === 400) {
-      showHelper("제목과 내용을 다시 확인해주세요.");
-      return;
-    }
-
-    if (response.status === 404) {
-      showHelper("로그인한 사용자를 찾을 수 없습니다.");
-      return;
-    }
 
     if (!response.ok) {
       showHelper("게시글 작성에 실패했습니다.");
@@ -151,20 +153,21 @@ writeForm.addEventListener("submit", async function (event) {
   }
 });
 
-
-// 프사 버튼
 profileButton.addEventListener("click", function (event) {
   event.stopPropagation();
   dropdown.classList.toggle("hidden");
 });
 
-document.addEventListener("click", function () {
+document.addEventListener("click", function (event) {
   dropdown.classList.add("hidden");
+
+  if (!event.target.closest(".stadium-select")) {
+    stadiumDropdown?.classList.add("hidden");
+  }
 });
 
 logoutButton.addEventListener("click", function (event) {
   event.preventDefault();
-
   localStorage.clear();
   window.location.href = "./login.html";
 });

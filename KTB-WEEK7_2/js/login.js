@@ -91,7 +91,7 @@ loginForm.addEventListener("submit", async function (event) {
     // WEEK8: accessToken 반환으로 변경
     localStorage.setItem("accessToken", data.accessToken);
 
-    window.location.href = "./posts.html";
+    window.location.href = "./home.html";
   } catch (error) {
     console.error(error);
     showError("서버와 연결할 수 없습니다.");

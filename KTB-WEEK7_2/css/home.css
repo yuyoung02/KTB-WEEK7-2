@@ -1,0 +1,573 @@
+@font-face {
+  font-family: "BMKkubulimTTF";
+  src: url("../assets/fonts/BMKkubulimTTF.ttf") format("truetype");
+}
+
+:root {
+  --primary: #1E3A5F;
+  --primary-dark: #142A46;
+  --primary-soft: #E9EFF5;
+  --background: #F4F5F7;
+  --surface: #FFFFFF;
+  --border: #D9DEE5;
+  --text: #111111;
+  --subtext: #6B7280;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding-bottom: 80px;
+  background-color: var(--background);
+  font-family: "SandollGogoRound", sans-serif;
+  color: var(--text);
+}
+
+.header {
+  width: 100%;
+  border-bottom: 1px solid #000;
+  background-color: var(--background);
+}
+
+.header-top {
+  position: relative;
+  width: calc(100% - 32px);
+  max-width: 1180px;
+  height: 104px;
+  margin: 0 auto;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 400;
+}
+
+.logo {
+  text-decoration: none;
+  color: inherit;
+  font-family: "BMKkubulimTTF";
+}
+
+.logo h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 400;
+}
+
+.profile-menu {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: sans-serif;
+}
+
+.header-profile-image {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  display: block;
+}
+
+.dropdown {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  width: 115px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: #D9D9D9;
+  z-index: 30;
+}
+
+.dropdown li {
+  height: 40px;
+}
+
+.dropdown li a {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #000;
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.hidden {
+  display: none;
+}
+
+.header-nav {
+  height: 54px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 48px;
+}
+
+.header-nav a {
+  position: relative;
+  color: #374151;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.header-nav a:hover {
+  color: var(--primary);
+}
+
+.header-nav a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -18px;
+  width: 0;
+  height: 2px;
+  background-color: var(--primary);
+  transform: translateX(-50%);
+  transition: width 0.2s ease;
+}
+
+.header-nav a:hover::after {
+  width: 100%;
+}
+
+.home-page {
+  display: flex;
+  justify-content: center;
+}
+
+.home-container {
+  width: calc(100% - 32px);
+  max-width: 720px;
+  margin-top: 48px;
+}
+
+.hero {
+  padding: 42px;
+  border-radius: 20px;
+  background: var(--primary);
+  color: #fff;
+}
+
+.hero-label,
+.section-badge {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.hero-label {
+  color: #C9D7E6;
+}
+
+.hero h2 {
+  margin: 0;
+  font-size: 25px;
+  line-height: 1.28;
+}
+
+.hero-description {
+  margin: 18px 0 26px;
+  color: #DCE5EE;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.primary-button {
+  display: inline-flex;
+  min-width: 160px;
+  height: 42px;
+  padding: 0 20px;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 800;
+  justify-content: center;
+  align-items: center;
+}
+
+.notice-banner {
+  margin-top: 16px;
+  min-height: 72px;
+  padding: 18px 22px;
+  border: 1px solid #D7E1EC;
+  border-radius: 14px;
+  background: var(--primary-soft);
+  color: inherit;
+  text-decoration: none;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notice-banner .section-badge {
+  margin: 0 12px 0 0;
+  color: var(--primary);
+}
+
+.notice-banner strong {
+  font-size: 14px;
+}
+
+.notice-arrow {
+  color: var(--primary);
+  font-size: 28px;
+}
+
+.section-block {
+  margin-top: 40px;
+}
+
+.section-title-row {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.section-title-row .section-badge {
+  margin-bottom: 5px;
+  color: var(--primary);
+}
+
+.section-title-row h3 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.section-caption {
+  color: var(--subtext);
+  font-size: 12px;
+}
+
+.text-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* prediction */
+
+.prediction-card {
+  padding: 24px;
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: 3px 4px 4px rgba(204, 204, 204, 0.2);
+}
+
+.prediction-card.featured {
+  border: 1px solid #DCE5EE;
+}
+
+.game-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  color: var(--subtext);
+  font-size: 12px;
+}
+
+.game-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.game-date {
+  color: #374151;
+  font-weight: 700;
+}
+
+.game-status {
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.matchup {
+  margin: 28px 0 24px;
+  display: grid;
+  grid-template-columns: 1fr 72px 1fr;
+  align-items: center;
+  text-align: center;
+}
+
+.team {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+/* 팀 정보 */
+
+.team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 로고 + 팀 이름 */
+
+.team-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.team-logo {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.team-code {
+  color: #124FC4;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.starting-pitcher {
+  color: var(--subtext);
+  font-size: 12px;
+}
+
+
+/* =========================
+   승부 예측 슬라이더
+========================= */
+
+.prediction-slider {
+  position: relative;
+}
+
+/* 카드가 들어가는 영역 */
+
+.prediction-slide {
+  width: 100%;
+}
+
+/* 좌우 버튼 */
+
+.slider-button {
+  position: absolute;
+  top: 50%;
+
+  width: 38px;
+  height: 38px;
+
+  border: 1px solid #D9DEE5;
+  border-radius: 50%;
+
+  background: #FFFFFF;
+  color: var(--primary);
+
+  font-size: 26px;
+  line-height: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
+
+  transform: translateY(-50%);
+
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+
+  z-index: 5;
+}
+
+.slider-button:hover {
+  background: var(--primary);
+  color: #FFFFFF;
+  border-color: var(--primary);
+}
+
+/* 카드 좌우 바깥에 배치 */
+
+.slider-button.prev {
+  left: -19px;
+}
+
+.slider-button.next {
+  right: -19px;
+}
+
+/* 1 / 5 */
+
+.slider-pagination {
+  margin-top: 12px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 5px;
+
+  color: var(--subtext);
+  font-size: 12px;
+}
+
+#currentGameNumber {
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.versus {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--subtext);
+  font-size: 11px;
+}
+
+.versus strong {
+  color: var(--text);
+  font-size: 20px;
+}
+
+.vote-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.vote-button {
+  flex: 1;
+  height: 42px;
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--primary);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.vote-button:hover,
+.vote-button.selected {
+  background: var(--primary);
+  color: #fff;
+}
+
+.prediction-footer {
+  margin-top: 14px;
+  color: var(--subtext);
+  font-size: 11px;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.vote-summary {
+  margin-top: 14px;
+  display: flex;
+  justify-content: space-between;
+  color: var(--subtext);
+  font-size: 12px;
+}
+
+/* ranking */
+
+.ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ranking-card {
+  min-height: 76px;
+  padding: 0 20px;
+  border-radius: 14px;
+  background: #fff;
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  align-items: center;
+}
+
+.ranking-card.first {
+  border: 1px solid #B7C7D8;
+}
+
+.rank-number {
+  color: var(--primary);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.ranking-user {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ranking-user strong {
+  font-size: 14px;
+}
+
+.ranking-user span {
+  color: var(--subtext);
+  font-size: 11px;
+}
+
+.ranking-point {
+  color: var(--primary);
+  font-size: 15px;
+}
+
+/* stadium */
+
+.stadium-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.stadium-card {
+  min-height: 96px;
+  padding: 20px;
+  border-radius: 14px;
+  background: #fff;
+  color: #000;
+  text-decoration: none;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 7px;
+}
+
+.stadium-card strong {
+  font-size: 15px;
+}
+
+.stadium-card span {
+  color: var(--subtext);
+  font-size: 12px;
+}

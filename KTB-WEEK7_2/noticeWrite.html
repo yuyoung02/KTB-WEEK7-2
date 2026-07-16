@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>공지사항 작성</title>
+  <link rel="stylesheet" href="./css/noticeWrite.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="header-top">
+      <a href="./home.html" class="logo">
+        <h1>⚾️ 야구 = 질병 ⚾️</h1>
+      </a>
+
+      <div class="profile-menu">
+        <img
+          src="./assets/images/defaultProfileImage.png"
+          class="header-profile-image"
+          id="profileButton"
+          alt="프로필"
+        />
+
+        <ul class="dropdown hidden">
+          <li><a href="./userEdit.html">마이페이지</a></li>
+          <li><a href="./passwordEdit.html">비밀번호수정</a></li>
+          <li><a href="./login.html" id="logoutButton">로그아웃</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <nav class="header-nav">
+      <a href="./posts.html">구장 이야기</a>
+      <a href="./home.html#predictions">승부 예측</a>
+      <a href="./home.html#ranking">시즌 랭킹</a>
+      <a href="./notices.html" class="active">공지사항</a>
+    </nav>
+  </header>
+
+  <main class="notice-write-page">
+    <section class="notice-write-container">
+      <div class="page-title-row">
+        <div>
+          <p class="eyebrow">NOTICE</p>
+          <h2>공지사항 작성</h2>
+          <p class="page-description">
+            커뮤니티 공지 또는 경기 관련 공지를 등록할 수 있습니다.
+          </p>
+        </div>
+
+        <a href="./notices.html" class="back-link">목록으로</a>
+      </div>
+
+      <form class="notice-write-form" id="noticeWriteForm">
+        <div class="form-group">
+          <label for="noticeType">공지 유형*</label>
+
+          <div class="type-selector">
+            <label class="type-option">
+              <input
+                type="radio"
+                name="noticeType"
+                value="GENERAL"
+                checked
+              />
+              <span>일반 공지</span>
+            </label>
+
+            <label class="type-option">
+              <input
+                type="radio"
+                name="noticeType"
+                value="GAME"
+              />
+              <span>경기 공지</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="isPinned" />
+            <span>중요 공지로 고정</span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label for="title">제목*</label>
+          <input
+            id="title"
+            type="text"
+            maxlength="60"
+            placeholder="공지사항 제목을 입력해주세요."
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="content">내용*</label>
+          <textarea
+            id="content"
+            placeholder="공지사항 내용을 입력해주세요."
+          ></textarea>
+          <p class="helper-text" id="helperText"></p>
+        </div>
+
+        <div class="button-row">
+          <a href="./notices.html" class="cancel-button">취소</a>
+          <button type="submit" class="submit-button">등록하기</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script src="./js/noticeWrite.js"></script>
+</body>
+</html>
