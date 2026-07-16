@@ -37,6 +37,8 @@ const postId = params.get("postId");
 let selectedCommentId = null;
 let editingCommentId = null;
 let isLiked = false;
+let isLikeProcessing = false;
+let isCommentProcessing = false;
 
 // 게시글 존재 여부 확인
 if (!postId) {
@@ -155,6 +157,11 @@ function createCommentItem(comment) {
 
 // 좋아요 버튼 이벤트 처리 -> 누르면 활성화 아니면 활성화 끄기
 likeButton.addEventListener("click", async function () {
+  if (isLikeProcessing) return;
+
+  isLikeProcessing = true;
+  likeButton.disabled = true;
+
   try {
     const method = isLiked ? "DELETE" : "POST";
 
@@ -169,21 +176,32 @@ likeButton.addEventListener("click", async function () {
     if (error.status === 409) alert("이미 좋아요를 누른 게시글입니다.");
     else if (error.status === 404) alert("좋아요 정보를 찾을 수 없습니다.");
     else alert("좋아요 처리에 실패했습니다.");
+  } finally {
+    isLikeProcessing = false;
+    likeButton.disabled = false;
   }
 });
 
 // 댓글 등록 버튼 이벤트 처리
 commentSubmitButton.addEventListener("click", async function () {
+  if (isCommentProcessing) return;
+
   const commentText = commentTextarea.value.trim();
 
   if (commentText === "") return;
 
-  if (editingCommentId) {
-    await updateComment(editingCommentId, commentText);
-    return;
+  isCommentProcessing = true;
+  commentSubmitButton.disabled = true;
+  try {
+    if (editingCommentId) {
+      await updateComment(editingCommentId, commentText);
+    } else {
+      await createComment(commentText);
+    }
+  } finally {
+    isCommentProcessing = false;
+    commentSubmitButton.disabled = false;
   }
-
-  await createComment(commentText);
 });
 
 // 댓글 작성
