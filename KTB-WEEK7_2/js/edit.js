@@ -135,7 +135,8 @@ editForm.addEventListener("submit", async function (event) {
 
   const body = {
     patchSubject: titleInput.value.trim(),
-    patchText: contentTextarea.value.trim()
+    patchText: contentTextarea.value.trim(),
+    patchImage: null
   };
 
   if (selectedStadium) {
