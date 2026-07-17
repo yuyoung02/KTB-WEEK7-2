@@ -17,7 +17,10 @@ body {
 
 .header {
   position: relative;
+  width: calc(100% - 32px);
+  max-width: 592px;
   height: 104px;
+  margin: 0 auto;
   font-family: "BMKkubulimTTF";
   border-bottom: 1px solid #000;
   display: flex;
@@ -38,27 +41,13 @@ body {
 
 .back-button {
   position: absolute;
-  left: calc(50% - 285px);
+  left: 0;
   top: 50%;
   transform: translateY(-50%);
   color: #000;
   text-decoration: none;
   font-size: 42px;
   line-height: 1;
-}
-
-.profile-link {
-  position: absolute;
-  right: calc(50% - 285px);
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.header-profile-image {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  object-fit: cover;
 }
 
 .write-page {
@@ -191,7 +180,7 @@ body {
 .profile-menu {
   position: absolute;
   font-family: sans-serif;
-  right: calc(50% - 285px);
+  right: 0;
   top: 50%;
   transform: translateY(-50%);
 }

@@ -17,6 +17,9 @@ body {
 
 .header {
   position: relative;
+  width: calc(100% - 32px);
+  max-width: 592px;
+  margin: 0 auto;
   height: 104px;
   font-family: "BMKkubulimTTF";
   border-bottom: 1px solid #000;
@@ -31,9 +34,14 @@ body {
   font-weight: 400;
 }
 
+.logo {
+  color: inherit;
+  text-decoration: none;
+}
+
 .back-button {
   position: absolute;
-  left: calc(50% - 280px);
+  left: 0;
   top: 50%;
   transform: translateY(-50%);
   color: #000;

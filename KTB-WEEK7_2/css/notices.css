@@ -31,7 +31,6 @@ body {
 
 .header {
   width: 100%;
-  border-bottom: 1px solid #000;
   background: var(--background);
 }
 
@@ -39,7 +38,7 @@ body {
   position: relative;
   z-index: 100;
   width: calc(100% - 32px);
-  max-width: 1180px;
+  max-width: 592px;
   height: 104px;
   margin: 0 auto;
 
@@ -107,7 +106,11 @@ body {
 .header-nav {
   position: relative;
   z-index: 1;
+  width: calc(100% - 32px);
+  max-width: 592px;
   height: 54px;
+  margin: 0 auto;
+  border-bottom: 1px solid #000;
   border-top: 1px solid var(--border);
 
   display: flex;
